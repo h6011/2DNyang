@@ -3847,6 +3847,7 @@ MonoBehaviour:
   ExitGameBtn: {fileID: 1634366698}
   StageItem: {fileID: 2439980506092587301, guid: 4f5d4359ea2eb9948976d61b7e9b64e1, type: 3}
   StageBtns: {fileID: 1386061109}
+  isApplicationCanQuit: 0
 --- !u!224 &1771937396
 RectTransform:
   m_ObjectHideFlags: 0

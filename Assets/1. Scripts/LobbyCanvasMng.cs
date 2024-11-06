@@ -24,6 +24,12 @@ public class LobbyCanvasMng : MonoBehaviour
     public Transform StageBtns;
 
 
+
+
+    public System.Action quitEvent;
+    public bool isApplicationCanQuit;
+
+
     private void Awake()
     {
         if (Instance)
@@ -34,15 +40,21 @@ public class LobbyCanvasMng : MonoBehaviour
         {
             Instance = this;
         }
+
+
+        quitEvent += () =>
+        {
+            VisibleUIExpectOther("NoticeExit");
+        };
+
+        Application.wantsToQuit += ApplicationQuit;
     }
 
 
     private void addListenerToBtn(Button _Btn, UnityEngine.Events.UnityAction _Action)
     {
-        Debug.Log(1);
         _Btn.onClick.RemoveAllListeners();
         _Btn.onClick.AddListener(_Action);
-        Debug.Log(2);
     }
 
     private void SetUpStageUI()
@@ -66,20 +78,65 @@ public class LobbyCanvasMng : MonoBehaviour
         
     }
 
+    private void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+Application.Quit();
+#endif
+    }
+
     private void Start()
     {
         SetUpStageUI();
 
         VisibleUIExpectOther("Main");
 
-        addListenerToBtn(PlayBtn, () => 
+        addListenerToBtn(PlayBtn, () =>
         {
             VisibleUIExpectOther("Stage");
         });
 
+        addListenerToBtn(ExitGameBtn, () =>
+        {
+            ExitGame();
+            //Application.Quit();
+        });
+
+        //Application.wantsToQuit
 
     }
 
+    
+
+   
+
+
+
+    public void OnClickQuitProcess()
+    {
+        isApplicationCanQuit = true;
+        Application.Quit();
+    }
+
+
+    public void OnClickQuitCancel()
+    {
+        isApplicationCanQuit = false;
+        VisibleUIExpectOther("Main");
+    }
+
+
+    private bool ApplicationQuit()
+    {
+        if (!isApplicationCanQuit)
+        {
+            quitEvent?.Invoke();
+        }
+
+        return isApplicationCanQuit;
+    }
 
 
     public void VisibleUI(string name)
