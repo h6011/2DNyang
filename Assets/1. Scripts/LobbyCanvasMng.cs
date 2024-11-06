@@ -1,11 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LobbyCanvasMng : MonoBehaviour
 {
 
     public static LobbyCanvasMng Instance;
+
+    [Header("UI")]
+
+    public Button PlayBtn;
+    public Button ShopBtn;
+    public Button SettingsBtn;
+    public Button ExitGameBtn;
+
+    [Header("Prefab")]
+
+    public GameObject StageItem;
+
+    [Header("Prefab Parent")]
+
+    public Transform StageBtns;
 
 
     private void Awake()
@@ -19,6 +35,52 @@ public class LobbyCanvasMng : MonoBehaviour
             Instance = this;
         }
     }
+
+
+    private void addListenerToBtn(Button _Btn, UnityEngine.Events.UnityAction _Action)
+    {
+        Debug.Log(1);
+        _Btn.onClick.RemoveAllListeners();
+        _Btn.onClick.AddListener(_Action);
+        Debug.Log(2);
+    }
+
+    private void SetUpStageUI()
+    {
+        List<GameStatus.StageInfoClass> Infos = GameStatus.StageInfos;
+        int count = Infos.Count;
+
+        for (int i = 0; i < count; i++)
+        {
+            GameStatus.StageInfoClass Info = Infos[i];
+
+            GameObject newItem = Instantiate(StageItem, StageBtns);
+            StageItemScript stageItemScript = newItem.GetComponent<StageItemScript>();
+            stageItemScript.ChangeText(Info.index.ToString());
+
+
+
+
+        }
+
+        
+    }
+
+    private void Start()
+    {
+        SetUpStageUI();
+
+        VisibleUIExpectOther("Main");
+
+        addListenerToBtn(PlayBtn, () => 
+        {
+            VisibleUIExpectOther("Stage");
+        });
+
+
+    }
+
+
 
     public void VisibleUI(string name)
     {
@@ -35,6 +97,23 @@ public class LobbyCanvasMng : MonoBehaviour
         if (findUI)
         {
             findUI.gameObject.SetActive(boolean);
+        }
+    }
+
+    public void VisibleUIExpectOther(string name)
+    {
+        int childCount = transform.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            if (child.name == name)
+            {
+                child.gameObject.SetActive(true);
+            }
+            else
+            {
+                child.gameObject.SetActive(false);
+            }
         }
     }
 
