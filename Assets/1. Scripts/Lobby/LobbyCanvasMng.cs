@@ -15,6 +15,11 @@ public class LobbyCanvasMng : MonoBehaviour
     public Button SettingsBtn;
     public Button ExitGameBtn;
 
+    [Header("NoticeExit UI")]
+
+    public Button NoticeExitUI_YesBtn;
+    public Button NoticeExitUI_NoBtn;
+
     [Header("Prefab")]
 
     public GameObject StageItem;
@@ -26,28 +31,19 @@ public class LobbyCanvasMng : MonoBehaviour
 
 
 
-    public System.Action quitEvent;
-    public bool isApplicationCanQuit;
+    
 
 
     private void Awake()
     {
-        if (Instance)
-        {
-            Destroy(gameObject);
-        }
-        else
+        if (Instance == null)
         {
             Instance = this;
         }
-
-
-        quitEvent += () =>
+        else
         {
-            VisibleUIExpectOther("NoticeExit");
-        };
-
-        Application.wantsToQuit += ApplicationQuit;
+            Destroy(gameObject);
+        }
     }
 
 
@@ -78,14 +74,7 @@ public class LobbyCanvasMng : MonoBehaviour
         
     }
 
-    private void ExitGame()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-Application.Quit();
-#endif
-    }
+    
 
     private void Start()
     {
@@ -100,11 +89,20 @@ Application.Quit();
 
         addListenerToBtn(ExitGameBtn, () =>
         {
-            ExitGame();
-            //Application.Quit();
+            ApplicationQuitMng.Instance.ExitGame();
         });
 
-        //Application.wantsToQuit
+        addListenerToBtn(NoticeExitUI_YesBtn, () =>
+        {
+            ApplicationQuitMng.Instance.TryQuitGame();
+        });
+
+        addListenerToBtn(NoticeExitUI_NoBtn, () =>
+        {
+            ApplicationQuitMng.Instance.TryCancelQuitGame();
+        });
+
+
 
     }
 
@@ -114,29 +112,7 @@ Application.Quit();
 
 
 
-    public void OnClickQuitProcess()
-    {
-        isApplicationCanQuit = true;
-        Application.Quit();
-    }
-
-
-    public void OnClickQuitCancel()
-    {
-        isApplicationCanQuit = false;
-        VisibleUIExpectOther("Main");
-    }
-
-
-    private bool ApplicationQuit()
-    {
-        if (!isApplicationCanQuit)
-        {
-            quitEvent?.Invoke();
-        }
-
-        return isApplicationCanQuit;
-    }
+    
 
 
     public void VisibleUI(string name)
