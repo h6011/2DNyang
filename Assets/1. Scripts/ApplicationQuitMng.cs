@@ -75,7 +75,10 @@ Application.Quit();
     {
         if (!CanExitGame)
         {
-            lobbyCanvasMng.VisibleUIExpectOther("NoticeExit");
+            if (lobbyCanvasMng)
+            {
+                lobbyCanvasMng.VisibleUIExpectOther("NoticeExit");
+            }
         }
 
         return CanExitGame;

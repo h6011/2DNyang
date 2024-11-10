@@ -20,6 +20,8 @@ public class GameStatus : MonoBehaviour
     };
 
 
+    public static bool isLobbyLoaded = false;
+
 
 
 
