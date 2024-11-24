@@ -29,19 +29,6 @@ public class GameCamMng : MonoBehaviour
 
         cameraPosX += Horizontal * cameraMoveSpeed * Time.deltaTime;
 
-        float boundX = fieldCollider.size.x;
-        Vector3 center = fieldCollider.bounds.center;
-        Vector3 boundLeft = center + new Vector3(-boundX, 0, 0);
-
-        Vector3 world = mainCam.ViewportToWorldPoint(new Vector3(0.5f, 0, 0));
-        Vector3 view = mainCam.WorldToViewportPoint(boundLeft);
-
-        Debug.Log($"view.x : {view.x}");
-
-        if (view.x > -1)
-        {
-            Debug.Log(1);
-        }
 
 
     }
@@ -56,8 +43,31 @@ public class GameCamMng : MonoBehaviour
         Vector3 savedPos = mainCam.transform.position;
         mainCam.transform.position = new Vector3(cameraPosX, savedPos.y, savedPos.z);
 
+        float boundX = fieldCollider.size.x;
+        Vector3 center = fieldCollider.bounds.center;
+        Vector3 boundLeft = center + new Vector3(-boundX / 2, 0, 0);
 
-        
+        Vector3 camLeftWorld = mainCam.ViewportToWorldPoint(new Vector3(0f, 0.5f, 0));
+
+        //mainCam.transform.position = boundLeft;
+
+        Vector3 BoundLeftView = Camera.main.WorldToViewportPoint(boundLeft);
+        Debug.LogWarning(BoundLeftView.x);
+
+        if (BoundLeftView.x > 0)
+        {
+            BoundLeftView.x = 0;
+
+            
+
+            Vector3 Oppsite = mainCam.ViewportToWorldPoint(BoundLeftView);
+            Vector3 FixPos = Oppsite + new Vector3(boundX / 2, 0, 0);
+            mainCam.transform.position = new Vector3(FixPos.x, savedPos.y, savedPos.z);
+        }
+
+       
+
+
 
     }
 
