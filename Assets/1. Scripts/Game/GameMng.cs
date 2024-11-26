@@ -29,6 +29,14 @@ public class GameMng : MonoBehaviour
     }
 
 
+    private void Start()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            EntityMng.Instance.SpawnEntity(eEntityType.Ally);
+        }
+    }
+
 
 
 
