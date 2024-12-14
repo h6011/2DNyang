@@ -52,7 +52,7 @@ public class GameCamMng : MonoBehaviour
         //mainCam.transform.position = boundLeft;
 
         Vector3 BoundLeftView = Camera.main.WorldToViewportPoint(boundLeft);
-        Debug.LogWarning(BoundLeftView.x);
+        //Debug.LogWarning(BoundLeftView.x);
 
         if (BoundLeftView.x > 0)
         {

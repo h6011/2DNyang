@@ -65,6 +65,7 @@ public class LobbyCanvasMng : MonoBehaviour
             GameObject newItem = Instantiate(StageItem, StageBtns);
             StageItemScript stageItemScript = newItem.GetComponent<StageItemScript>();
             stageItemScript.ChangeText(Info.index.ToString());
+            stageItemScript.ChangeLevel(Info.index);
 
 
 

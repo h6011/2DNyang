@@ -10,14 +10,7 @@ public class GameMng : MonoBehaviour
 
     private void Awake()
     {
-        if (GameStatus.isLobbyLoaded == false)
-        {
-            if (SceneManager.GetActiveScene().name != "Lobby")
-            {
-                SceneManager.LoadScene("Lobby");
-                return;
-            }
-        }
+        
         if (Instance == null)
         {
             Instance = this;
@@ -31,10 +24,29 @@ public class GameMng : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < 5; i++)
+        int currentLevel = GameStatus.CurrentLevel;
+        Debug.Log($"Current Level : {currentLevel}");
+
+
+        List<AllyListArg> args = GameStatus.GetStageWaveInfoByWave(currentLevel);
+        int argsCount = args.Count;
+        for (int iNum = 0; iNum < args.Count; iNum++)
         {
-            EntityMng.Instance.SpawnEntity(eEntityType.Ally);
+            AllyListArg allyListArg = args[iNum];
+            int allyListArgCount = allyListArg.count;
+            for (int jNum = 0; jNum < allyListArgCount; jNum++)
+            {
+                EntityMng.Instance.TrySpawnAlly(allyListArg.allyType);
+            }
+
         }
+
+        
+
+        //for (int i = 0; i < 5; i++)
+        //{
+        //    EntityMng.Instance.SpawnEntity(eEntityType.Ally);
+        //}
     }
 
 
