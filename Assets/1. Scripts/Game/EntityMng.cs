@@ -18,9 +18,15 @@ public class EntityMng : MonoBehaviour
     [Header("Vars")]
     public Transform Dynamic;
 
-    public GameObject swordEntityObj;
-    public GameObject shieldEntityObj;
-    public GameObject bowEntityObj;
+    [Header("Ally 아군")]
+    public GameObject swordAllyObj;
+    public GameObject shieldAllyObj;
+    public GameObject bowAllyObj;
+
+    [Header("Enemy 적군")]
+    public GameObject swordEnemyObj;
+    public GameObject shieldEnemyObj;
+    public GameObject bowEnemyObj;
 
 
 
@@ -36,34 +42,55 @@ public class EntityMng : MonoBehaviour
         }
     }
 
-
-
-    public void SpawnEntity(eEntityType entityType)
+    private void Start()
     {
-        if (entityType == eEntityType.Ally)
-        {
-            //GameObject newEntity = Instantiate(testAlly, AllySpawnPos.position, Quaternion.identity, Dynamic);
-        }
-        else if (entityType == eEntityType.Enemy)
-        {
-
-        }
+        
     }
+
 
     public void TrySpawnAlly(eAllyType allyType)
     {
+        GameObject obj = null;
+
         if (allyType == eAllyType.Sword)
         {
-            GameObject newEntity = Instantiate(swordEntityObj, AllySpawnPos.position, Quaternion.identity, Dynamic);
+            obj = swordAllyObj;
         }
         else if (allyType == eAllyType.Shield)
         {
-            GameObject newEntity = Instantiate(shieldEntityObj, AllySpawnPos.position, Quaternion.identity, Dynamic);
+            obj = shieldEnemyObj;
         }
         else if (allyType == eAllyType.Bow)
         {
-            GameObject newEntity = Instantiate(bowEntityObj, AllySpawnPos.position, Quaternion.identity, Dynamic);
+            obj = bowAllyObj;
         }
+
+        GameObject newAlly = Instantiate(obj, AllySpawnPos.position, Quaternion.identity, Dynamic);
+
+    }
+
+
+    public void TrySpawnEnemy(eEnemyType enemyType)
+    {
+        GameObject obj = null;
+
+
+
+        if (enemyType == eEnemyType.Sword)
+        {
+            obj = swordEnemyObj;
+        }
+        else if (enemyType == eEnemyType.Shield)
+        {
+            obj = shieldEnemyObj;
+        }
+        else if (enemyType == eEnemyType.Bow)
+        {
+            obj = bowEnemyObj;
+        }
+
+        Debug.Log(enemyType);
+        GameObject newEnemy = Instantiate(obj, EnemySpawnPos.position, Quaternion.identity, Dynamic);
     }
 
 

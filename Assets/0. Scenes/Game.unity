@@ -1654,9 +1654,12 @@ MonoBehaviour:
   AllySpawnPos: {fileID: 326835209}
   EnemySpawnPos: {fileID: 887154342}
   Dynamic: {fileID: 836367384}
-  swordEntityObj: {fileID: 1092530736055117401, guid: 7945fb4558e347347bee14151e701cf9, type: 3}
-  shieldEntityObj: {fileID: 0}
-  bowEntityObj: {fileID: 0}
+  swordAllyObj: {fileID: 1092530736055117401, guid: 7945fb4558e347347bee14151e701cf9, type: 3}
+  shieldAllyObj: {fileID: 0}
+  bowAllyObj: {fileID: 0}
+  swordEnemyObj: {fileID: 1092530736055117401, guid: e524be50626b488498607715f626f621, type: 3}
+  shieldEnemyObj: {fileID: 0}
+  bowEnemyObj: {fileID: 0}
 --- !u!1 &1653387302
 GameObject:
   m_ObjectHideFlags: 0

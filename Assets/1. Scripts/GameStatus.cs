@@ -4,13 +4,15 @@ using UnityEngine;
 
 
 
-public enum eEntityType
-{
-    Ally,
-    Enemy,
-}
 
 public enum eAllyType
+{
+    Sword,
+    Shield,
+    Bow,
+}
+
+public enum eEnemyType
 {
     Sword,
     Shield,
@@ -20,9 +22,9 @@ public enum eAllyType
 
 
 
-public class AllyListArg
+public class EnemyListArg
 {
-    public eAllyType allyType;
+    public eEnemyType enemyType;
     public int count;
 }
 
@@ -30,7 +32,7 @@ public class AllyListArg
 public class StageWaveInfoArg
 {
     public int wave;
-    public List<AllyListArg> arg;
+    public List<EnemyListArg> arg;
 
 }
 
@@ -64,23 +66,23 @@ public class GameStatus : MonoBehaviour
         new StageWaveInfoArg()
         {
             wave = 1,
-            arg = new List<AllyListArg>()
+            arg = new List<EnemyListArg>()
             {
-                new AllyListArg()
+                new EnemyListArg()
                 {
-                    allyType = eAllyType.Sword,
-                    count = 2,
+                    enemyType = eEnemyType.Sword,
+                    count = 1,
                 },
-                new AllyListArg()
+                new EnemyListArg()
                 {
-                    allyType = eAllyType.Sword,
-                    count = 3,
+                    enemyType = eEnemyType.Sword,
+                    count = 0,
                 },
             }
         }
     };
 
-    public static List<AllyListArg> GetStageWaveInfoByWave(int _wave)
+    public static List<EnemyListArg> GetStageWaveInfoByWave(int _wave)
     {
         int count = StageWaveInfo.Count;
         for (int iNum = 0; iNum < count; iNum++)
