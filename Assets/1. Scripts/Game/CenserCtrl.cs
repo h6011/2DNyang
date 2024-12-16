@@ -16,9 +16,9 @@ public class CenserCtrl : MonoBehaviour
         entityCtrl.WhenCenserCollide(collision.transform);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        entityCtrl.WhenCenserCollide(collision.transform);
-    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    entityCtrl.WhenCenserCollide(collision.transform);
+    //}
 
 }

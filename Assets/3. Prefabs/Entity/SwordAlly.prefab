@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 5490678748680819720}
   - component: {fileID: 248006014578642976}
   - component: {fileID: 5298863865776880063}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Censer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
