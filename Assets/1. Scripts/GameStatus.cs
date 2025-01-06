@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 
-
+[System.Serializable]
 public enum eAllyType
 {
     Sword,
@@ -71,7 +71,7 @@ public class GameStatus : MonoBehaviour
                 new EnemyListArg()
                 {
                     enemyType = eEnemyType.Sword,
-                    count = 1,
+                    count = 3,
                 },
                 new EnemyListArg()
                 {
@@ -95,6 +95,11 @@ public class GameStatus : MonoBehaviour
         }
         return null;
     }
-
+    
+    public static void addListenerToBtn(UnityEngine.UI.Button _Btn, UnityEngine.Events.UnityAction _Action)
+    {
+        _Btn.onClick.RemoveAllListeners();
+        _Btn.onClick.AddListener(_Action);
+    }
 
 }

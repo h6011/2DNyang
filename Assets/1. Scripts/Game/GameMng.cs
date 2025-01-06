@@ -43,7 +43,7 @@ public class GameMng : MonoBehaviour
 
 
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 3; i++)
         {
             EntityMng.Instance.TrySpawnAlly(eAllyType.Sword);
         }

@@ -89,7 +89,6 @@ public class EntityMng : MonoBehaviour
             obj = bowEnemyObj;
         }
 
-        Debug.Log(enemyType);
         GameObject newEnemy = Instantiate(obj, EnemySpawnPos.position, Quaternion.identity, Dynamic);
     }
 

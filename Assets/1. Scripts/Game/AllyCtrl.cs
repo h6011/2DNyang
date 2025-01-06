@@ -5,17 +5,17 @@ using UnityEngine;
 public class AllyCtrl : EntityCtrl
 {
 
-    private void FixedUpdate()
+    protected override void Start()
     {
-        if (CanMoving)
-        {
-            rb.velocity = new Vector3(speed, 0, 0);
-        }
-        else
-        {
-            rb.velocity = Vector3.zero;
-        }
+        base.Start();
+
+        IsEnemy = false;
+        integer = 1;
+
     }
+
+    
+
 
 
 }
