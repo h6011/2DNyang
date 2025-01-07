@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class AllyCtrl : EntityCtrl
 {
+    [Header("Settings")]
+    [SerializeField] eAllyType CurrentAllyType;
 
     protected override void Start()
     {
-        base.Start();
+        EntityProperties Properties = GameSettings.GetAllyProperties(CurrentAllyType);
+        RefillStat(Properties);
 
         IsEnemy = false;
-        integer = 1;
+        IntegerForMove = 1;
 
+        base.Start();
     }
 
     

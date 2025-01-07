@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class EnemyCtrl : EntityCtrl
 {
+    [Header("Settings")]
+    [SerializeField] eEnemyType CurrentEnemyType;
 
     protected override void Start()
     {
-        base.Start();
+        EntityProperties Properties = GameSettings.GetEnemyProperties(CurrentEnemyType);
+        RefillStat(Properties);
 
         IsEnemy = true;
-        integer = -1;
+        IntegerForMove = -1;
+
+        base.Start();
 
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,14 +12,18 @@ public class EntityCtrl : MonoBehaviour
     protected Animator animator;
     protected Transform HitboxTrans;
 
-    [Header("Vars [READ ONLY]")]
-    [SerializeField] protected float speed;
-    [SerializeField] protected float detectDistance;
-    protected int integer = 1;
+    // ATTACK TYPE LIKE BOW
+
+    protected int IntegerForMove = 1;
 
     [Header("Stat")]
-    [SerializeField] protected int MaxHp = 5;
-    [SerializeField] protected int Hp = 0;
+    [SerializeField] protected float MaxHp;
+    [SerializeField] protected float Hp;
+    [SerializeField] protected float Speed;
+    [SerializeField] protected float DetectDistance;
+    [SerializeField] protected float Damage;
+    [SerializeField] protected float AttackCooldown;
+
 
     [Header("ToCheck [READ ONLY]")]
     [SerializeField] protected bool IsDead = false;
@@ -29,10 +34,7 @@ public class EntityCtrl : MonoBehaviour
     [SerializeField] protected bool CanMoving = false;
 
 
-
-
     [Header("Tick [READ ONLY]")]
-    protected float AttackCooldown = 2f;
     [SerializeField] protected float AttackTick = 0f;
 
 
@@ -55,7 +57,6 @@ public class EntityCtrl : MonoBehaviour
     protected virtual void Start()
     {
         CanMoving = true;
-        InitalVarsAction();
         RefilHp();
     }
 
@@ -67,7 +68,7 @@ public class EntityCtrl : MonoBehaviour
         if (Application.isPlaying && HitboxTrans != null)
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(HitboxTrans.position, Vector2.right * detectDistance * integer);
+            Gizmos.DrawRay(HitboxTrans.position, Vector2.right * DetectDistance * IntegerForMove);
         }
     }
 
@@ -102,6 +103,21 @@ public class EntityCtrl : MonoBehaviour
     }
 
     /// <summary>
+    /// Refill Stat By Using Properties
+    /// </summary>
+    /// <param name="Properties">EntityProperties</param>
+    protected void RefillStat(EntityProperties Properties)
+    {
+        MaxHp = Properties.Hp;
+        Hp = Properties.Hp;
+        Speed = Random.Range(Properties.SpeedMin, Properties.SpeedMax);
+        DetectDistance = Random.Range(Properties.DetectDistanceMin, Properties.DetectDistanceMax);
+        Damage = Properties.Damage;
+        AttackCooldown = Properties.AttackCooldown;
+    }
+
+
+    /// <summary>
     /// Hp = MaxHp
     /// </summary>
     private void RefilHp()
@@ -109,11 +125,6 @@ public class EntityCtrl : MonoBehaviour
         Hp = MaxHp;
     }
 
-    private void InitalVarsAction()
-    {
-        speed = Random.Range(2f, 2.5f);
-        detectDistance = Random.Range(1f, 1.5f);
-    }
 
     private void InitalAnimatorAction()
     {
@@ -166,7 +177,7 @@ public class EntityCtrl : MonoBehaviour
             KnockbackForceFieldTick = KnockbackForceFieldTime;
             IsKnockbacked = true;
 
-            rb.AddForce(new Vector2(-integer * 4, 4), ForceMode2D.Impulse);
+            rb.AddForce(new Vector2(-IntegerForMove * 4, 4), ForceMode2D.Impulse);
 
         }
     }
@@ -206,7 +217,7 @@ public class EntityCtrl : MonoBehaviour
         }
 
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Dir, detectDistance, LayerMask.GetMask(TargetTagName));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Dir, DetectDistance, LayerMask.GetMask(TargetTagName));
         int count = hits.Length;
 
         List<Transform> Trans = new List<Transform>();
@@ -246,7 +257,7 @@ public class EntityCtrl : MonoBehaviour
         {
             if (CanMoving)
             {
-                rb.velocity = new Vector3(speed * integer, rb.velocity.y, 0);
+                rb.velocity = new Vector3(Speed * IntegerForMove, rb.velocity.y, 0);
             }
             else
             {
@@ -262,10 +273,12 @@ public class EntityCtrl : MonoBehaviour
     /// </summary>
     private void TickAction()
     {
-        KnockbackForceFieldTick -= Time.deltaTime;
+        float DeltaTime = Time.deltaTime;
+
+        KnockbackForceFieldTick -= DeltaTime;
         KnockbackForceFieldTick = Mathf.Clamp(KnockbackForceFieldTick, 0, 1000);
 
-        AttackTick += Time.deltaTime;
+        AttackTick += DeltaTime;
     }
 
     /// <summary>

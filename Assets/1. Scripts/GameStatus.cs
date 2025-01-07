@@ -4,21 +4,6 @@ using UnityEngine;
 
 
 
-[System.Serializable]
-public enum eAllyType
-{
-    Sword,
-    Shield,
-    Bow,
-}
-
-public enum eEnemyType
-{
-    Sword,
-    Shield,
-    Bow,
-}
-
 
 
 
@@ -35,6 +20,8 @@ public class StageWaveInfoArg
     public List<EnemyListArg> arg;
 
 }
+
+
 
 
 
