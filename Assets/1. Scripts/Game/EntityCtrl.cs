@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class EntityCtrl : MonoBehaviour
 {
+    [Header("Mng")]
+    protected PrefabMng prefabMng;
+
     [Header("Objects [READ ONLY]")]
     protected Rigidbody2D rb;
     protected Animator animator;
@@ -23,6 +26,10 @@ public class EntityCtrl : MonoBehaviour
     [SerializeField] protected float DetectDistance;
     [SerializeField] protected float Damage;
     [SerializeField] protected float AttackCooldown;
+
+    [SerializeField] protected eEntityAttackType EntityAttackType;
+    [SerializeField] protected string ProjectilePrefabName;
+    [SerializeField] protected GameObject ProjectilePrefabObject;
 
 
     [Header("ToCheck [READ ONLY]")]
@@ -52,6 +59,7 @@ public class EntityCtrl : MonoBehaviour
     {
         InitalLoadingAction();
         InitalAnimatorAction();
+        prefabMng = PrefabMng.Instance;
     }
 
     protected virtual void Start()
@@ -103,7 +111,7 @@ public class EntityCtrl : MonoBehaviour
     }
 
     /// <summary>
-    /// Refill Stat By Using Properties
+    /// Refill Stat By Using Properties, Activated After Start()
     /// </summary>
     /// <param name="Properties">EntityProperties</param>
     protected void RefillStat(EntityProperties Properties)
@@ -114,6 +122,10 @@ public class EntityCtrl : MonoBehaviour
         DetectDistance = Random.Range(Properties.DetectDistanceMin, Properties.DetectDistanceMax);
         Damage = Properties.Damage;
         AttackCooldown = Properties.AttackCooldown;
+
+        EntityAttackType = Properties.AttackType;
+        ProjectilePrefabName = Properties.ProjectilePrefabName;
+        ProjectilePrefabObject = prefabMng.GetPrefabByName(ProjectilePrefabName);
     }
 
 
@@ -151,7 +163,7 @@ public class EntityCtrl : MonoBehaviour
     /// 데미지 받는 함수
     /// </summary>
     /// <param name="Damage"></param>
-    protected void GetDamage(int Damage)
+    protected void GetDamage(float Damage)
     {
         if (IsDead == false && Hp > 0)
         {
@@ -319,7 +331,7 @@ public class EntityCtrl : MonoBehaviour
     /// </summary>
     /// <param name="Damage"></param>
 
-    public void GetAttacked(int Damage = 1)
+    public void GetAttacked(float Damage = 1)
     {
         //Debug.Log("Its Hurt!");
         animator.SetTrigger("Hit");
@@ -327,10 +339,8 @@ public class EntityCtrl : MonoBehaviour
         GetDamage(Damage);
     }
 
-    /// <summary>
-    /// Attack AnimationEvent Reached
-    /// </summary>
-    public void OnAttackAnimationEvent()
+
+    protected void MeleeAttack()
     {
         Transform[] FrontEnemies = GetFrontEnemies();
         int length = FrontEnemies.Length;
@@ -341,6 +351,36 @@ public class EntityCtrl : MonoBehaviour
             EntityCtrl entityCtrl = enemy.GetComponent<EntityCtrl>();
             entityCtrl.GetAttacked();
         }
+    }
+
+    protected void ProjectileAttack()
+    {
+        GameObject New = Instantiate(ProjectilePrefabObject, transform.Find("FirePos").position, Quaternion.identity);
+        ProjectileCtrl projectileCtrl = New.GetComponent<ProjectileCtrl>();
+        projectileCtrl.SetIsEnemyProjectile(IsEnemy);
+        projectileCtrl.WhenOnSpawn();
+    }
+
+    protected void AttackAction()
+    {
+        if (EntityAttackType == eEntityAttackType.Melee)
+        {
+            MeleeAttack();
+        }
+        else if (EntityAttackType == eEntityAttackType.Projectile)
+        {
+            ProjectileAttack();
+        }
+    }
+
+
+
+    /// <summary>
+    /// Attack AnimationEvent Reached
+    /// </summary>
+    public void OnAttackAnimationEvent()
+    {
+        AttackAction();
 
     }
 

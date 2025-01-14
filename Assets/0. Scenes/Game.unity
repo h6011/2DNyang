@@ -122,6 +122,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &217138201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 217138203}
+  - component: {fileID: 217138202}
+  m_Layer: 0
+  m_Name: PrefabMng
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &217138202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217138201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b35d943249dc704e9d6b06d7c3b31a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PrefabSettings:
+  - Name: BowProjectileAlly
+    PrefabLocation: {fileID: 8468576906126425173, guid: 3a607afdeed21a144a844c2b0e83b3d5, type: 3}
+  - Name: BowProjectileEnemy
+    PrefabLocation: {fileID: 2246980852825825906, guid: 05ed1f88c62ae934085c5456a7a02f73, type: 3}
+--- !u!4 &217138203
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217138201}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.6309087, y: 0.1319225, z: 0.010748704}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1254306644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &251625391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1269,6 +1318,7 @@ Transform:
   - {fileID: 1053119763}
   - {fileID: 251625392}
   - {fileID: 1983073683}
+  - {fileID: 217138203}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1279090166
@@ -1665,7 +1715,7 @@ MonoBehaviour:
   Dynamic: {fileID: 836367384}
   swordAllyObj: {fileID: 1092530736055117401, guid: 7945fb4558e347347bee14151e701cf9, type: 3}
   shieldAllyObj: {fileID: 0}
-  bowAllyObj: {fileID: 0}
+  bowAllyObj: {fileID: 1092530736055117401, guid: 1d862c9af234fb447bdd1447ca50f568, type: 3}
   swordEnemyObj: {fileID: 1092530736055117401, guid: e524be50626b488498607715f626f621, type: 3}
   shieldEnemyObj: {fileID: 0}
   bowEnemyObj: {fileID: 0}

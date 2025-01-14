@@ -22,6 +22,7 @@ public class EntityProperties
     /// Use When AttackType is Projectile
     /// </summary>
     public float ProjectileSpeed;
+    public string ProjectilePrefabName;
 }
 
 
@@ -87,6 +88,7 @@ public class GameSettings : MonoBehaviour
 
             AttackType = eEntityAttackType.Projectile,
             ProjectileSpeed = 5,
+            ProjectilePrefabName = "BowProjectileAlly",
         },
     };
     public static List<EnemyProperties> EnemyPropertiesSettings = new List<EnemyProperties>()
@@ -139,6 +141,7 @@ public class GameSettings : MonoBehaviour
 
             AttackType = eEntityAttackType.Projectile,
             ProjectileSpeed = 5,
+            ProjectilePrefabName = "BowProjectileEnemy",
         },
     };
 
