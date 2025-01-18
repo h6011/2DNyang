@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AllyShield
+  m_Controller: {fileID: 9100000, guid: 24446ce7f7cd0db47a0b2ce4dfd93791, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: ff182290479f27542b13bc5af556b5b5, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b635be33d14061c45ac5848f84e562cb, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 64e77dab4c6c9a246ae8765a7d774e4e, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 0cf3da3d9aac51548b92964cbf351eda, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: efe4e89a198757240a89ff3e8185615b, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b4a32f1d48228ce46aaa993d343f84a6, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 320d8cc387b7d5143bc7652ad0db4998, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: a5115620c2527ee4d902bd2988179f8b, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: d91118cfaf0d56c47a8d0a747456addd, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: bc89d7daad9d7164bb0dcbdaf6403381, type: 2}

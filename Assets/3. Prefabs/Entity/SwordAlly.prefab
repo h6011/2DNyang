@@ -50,10 +50,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHp: 5
   Hp: 0
-  CanMoving: 0
+  Speed: 0
+  DetectDistance: 0
+  Damage: 0
+  AttackCooldown: 0
+  EntityAttackType: 0
+  ProjectilePrefabName: 
+  ProjectilePrefabObject: {fileID: 0}
+  IsDead: 0
   IsEnemy: 0
   IsKnockbacked: 0
   IsGroundedForDisplay: 0
+  CanMoving: 0
+  AttackTick: 0
+  CurrentAllyType: 0
 --- !u!212 &4076613960383124393
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -94,7 +104,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -3154150011874791226, guid: 4d701fb8bab94204e92af20e3e7b6a8a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ally
   - Enemy
+  - Base
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - Enemy
   - Censer
   - Ground
-  - 
-  - 
+  - Base
+  - Projectile
   - 
   - 
   - 

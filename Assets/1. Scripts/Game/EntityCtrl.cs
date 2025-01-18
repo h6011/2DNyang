@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +7,7 @@ public class EntityCtrl : MonoBehaviour
 {
     [Header("Mng")]
     protected PrefabMng prefabMng;
+    protected EntityMng entityMng;
 
     [Header("Objects [READ ONLY]")]
     protected Rigidbody2D rb;
@@ -36,6 +35,7 @@ public class EntityCtrl : MonoBehaviour
     [SerializeField] protected bool IsDead = false;
     [SerializeField] protected bool IsEnemy = false;
     [SerializeField] protected bool IsKnockbacked = false;
+    protected bool KnockbackDebounce = false;
     [SerializeField] protected bool IsGroundedForDisplay = false;
 
     [SerializeField] protected bool CanMoving = false;
@@ -60,6 +60,7 @@ public class EntityCtrl : MonoBehaviour
         InitalLoadingAction();
         InitalAnimatorAction();
         prefabMng = PrefabMng.Instance;
+        entityMng = EntityMng.Instance;
     }
 
     protected virtual void Start()
@@ -68,17 +69,6 @@ public class EntityCtrl : MonoBehaviour
         RefilHp();
     }
 
-    /// <summary>
-    /// GIZMO
-    /// </summary>
-    private void OnDrawGizmos()
-    {
-        if (Application.isPlaying && HitboxTrans != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(HitboxTrans.position, Vector2.right * DetectDistance * IntegerForMove);
-        }
-    }
 
 
     protected virtual void FixedUpdate()
@@ -96,6 +86,7 @@ public class EntityCtrl : MonoBehaviour
         if (IsThereEnemy)
         {
             CanMoving = false;
+            animator.SetBool("IsMoving", false);
             if (AttackTick >= AttackCooldown)
             {
                 AttackTick = 0f;
@@ -105,6 +96,7 @@ public class EntityCtrl : MonoBehaviour
         else
         {
             CanMoving = true;
+            animator.SetBool("IsMoving", true);
         }
         IsGroundedForDisplayAction();
         IsKnockbackedAction();
@@ -154,8 +146,14 @@ public class EntityCtrl : MonoBehaviour
 
 
 
-
-
+    /// <summary>
+    /// 현재 Entity의 Hp 반환
+    /// </summary>
+    /// <returns></returns>
+    public float GetHp()
+    {
+        return Hp;
+    }
 
 
 
@@ -173,7 +171,16 @@ public class EntityCtrl : MonoBehaviour
             if (Hp <= 0)
             {
                 IsDead = true;
+                GetKnockback();
                 animator.SetBool("IsDead", true);
+            }
+            else if (Hp <= MaxHp * 1/2)
+            {
+                if (!KnockbackDebounce)
+                {
+                    KnockbackDebounce = true;
+                    GetKnockback();
+                }
             }
 
         }
@@ -188,6 +195,8 @@ public class EntityCtrl : MonoBehaviour
         {
             KnockbackForceFieldTick = KnockbackForceFieldTime;
             IsKnockbacked = true;
+
+            animator.SetTrigger("Hit");
 
             rb.AddForce(new Vector2(-IntegerForMove * 4, 4), ForceMode2D.Impulse);
 
@@ -207,6 +216,8 @@ public class EntityCtrl : MonoBehaviour
         }
         return false;
     }
+
+
 
     /// <summary>
     /// 현재 타격한 적이 있는지 반환
@@ -228,8 +239,9 @@ public class EntityCtrl : MonoBehaviour
             TargetTagName = "Enemy";
         }
 
+        int layerMask = LayerMask.GetMask(TargetTagName, "Base");
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Dir, DetectDistance, LayerMask.GetMask(TargetTagName));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Dir, DetectDistance, layerMask);
         int count = hits.Length;
 
         List<Transform> Trans = new List<Transform>();
@@ -237,9 +249,18 @@ public class EntityCtrl : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             RaycastHit2D hit = hits[i];
-            bool Compare = hit.transform.CompareTag(TargetTagName);
+            bool IsEntity = hit.transform.CompareTag(TargetTagName);
+            bool IsBase = hit.transform.CompareTag("Base");
 
-            if (Compare)
+            if (IsEntity)
+            {
+                EntityCtrl entityCtrl = hit.transform.GetComponent<EntityCtrl>();
+                if (!entityCtrl.IsDead || entityCtrl.Hp > 0)
+                {
+                    Trans.Add(hit.transform);
+                }
+            }
+            else if (IsBase && hit.transform.name == $"{TargetTagName}Base")
             {
                 Trans.Add(hit.transform);
             }
@@ -333,9 +354,7 @@ public class EntityCtrl : MonoBehaviour
 
     public void GetAttacked(float Damage = 1)
     {
-        //Debug.Log("Its Hurt!");
-        animator.SetTrigger("Hit");
-        GetKnockback();
+        //animator.SetTrigger("Hit");
         GetDamage(Damage);
     }
 
@@ -348,20 +367,21 @@ public class EntityCtrl : MonoBehaviour
         for (int i = 0; i < length; i++)
         {
             Transform enemy = FrontEnemies[i];
-            EntityCtrl entityCtrl = enemy.GetComponent<EntityCtrl>();
-            entityCtrl.GetAttacked();
+            GameMng.Instance.TryDamage(enemy, Damage);
         }
     }
 
     protected void ProjectileAttack()
     {
-        GameObject New = Instantiate(ProjectilePrefabObject, transform.Find("FirePos").position, Quaternion.identity);
+        GameObject New = Instantiate(ProjectilePrefabObject, transform.Find("FirePos").position, Quaternion.identity, entityMng.Dynamic);
         ProjectileCtrl projectileCtrl = New.GetComponent<ProjectileCtrl>();
         projectileCtrl.SetIsEnemyProjectile(IsEnemy);
         projectileCtrl.WhenOnSpawn();
     }
 
-    protected void AttackAction()
+    
+
+    protected virtual void AttackAction()
     {
         if (EntityAttackType == eEntityAttackType.Melee)
         {
@@ -388,7 +408,7 @@ public class EntityCtrl : MonoBehaviour
     /// Dead AnimationEvent Reached
     /// </summary>
 
-    public void OnDeadAnimationEvent()
+    public virtual void OnDeadAnimationEvent()
     {
         Destroy(gameObject);
     }

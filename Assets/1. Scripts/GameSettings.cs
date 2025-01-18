@@ -23,6 +23,9 @@ public class EntityProperties
     /// </summary>
     public float ProjectileSpeed;
     public string ProjectilePrefabName;
+
+
+    public float SpawnCost;
 }
 
 
@@ -45,16 +48,18 @@ public class GameSettings : MonoBehaviour
             AllyType = eAllyType.Sword,
             Hp = 10f,
 
-            DetectDistanceMin = 1f,
-            DetectDistanceMax = 1.5f,
+            DetectDistanceMin = 0.5f,
+            DetectDistanceMax = 0.6f,
 
-            SpeedMin = 2f,
-            SpeedMax = 2.5f,
+            SpeedMin = 1.5f,
+            SpeedMax = 2f,
 
             Damage = 1f,
             AttackCooldown = 1.5f,
 
             AttackType = eEntityAttackType.Melee,
+
+            SpawnCost = 50,
         },
         new AllyProperties()
         {
@@ -71,6 +76,8 @@ public class GameSettings : MonoBehaviour
             AttackCooldown = 2.5f,
 
             AttackType = eEntityAttackType.Melee,
+
+            SpawnCost = 30,
         },
         new AllyProperties()
         {
@@ -80,8 +87,8 @@ public class GameSettings : MonoBehaviour
             DetectDistanceMin = 4f,
             DetectDistanceMax = 5.5f,
 
-            SpeedMin = 2f,
-            SpeedMax = 2.5f,
+            SpeedMin = 1.3f,
+            SpeedMax = 1.8f,
 
             Damage = 1.5f,
             AttackCooldown = 1.5f,
@@ -89,8 +96,13 @@ public class GameSettings : MonoBehaviour
             AttackType = eEntityAttackType.Projectile,
             ProjectileSpeed = 5,
             ProjectilePrefabName = "BowProjectileAlly",
+
+            SpawnCost = 70,
         },
     };
+    /// <summary>
+    /// ENEMY
+    /// </summary>
     public static List<EnemyProperties> EnemyPropertiesSettings = new List<EnemyProperties>()
     {
         new EnemyProperties()
@@ -98,16 +110,18 @@ public class GameSettings : MonoBehaviour
             EnemyType = eEnemyType.Sword,
             Hp = 10f,
 
-            DetectDistanceMin = 1f,
-            DetectDistanceMax = 1.5f,
+            DetectDistanceMin = 0.5f,
+            DetectDistanceMax = 0.6f,
 
-            SpeedMin = 2f,
-            SpeedMax = 2.5f,
+            SpeedMin = 1.5f,
+            SpeedMax = 2f,
 
             Damage = 1f,
             AttackCooldown = 1.5f,
 
             AttackType = eEntityAttackType.Melee,
+
+            SpawnCost = 50,
         },
         new EnemyProperties()
         {
@@ -124,6 +138,8 @@ public class GameSettings : MonoBehaviour
             AttackCooldown = 2.5f,
 
             AttackType = eEntityAttackType.Melee,
+
+            SpawnCost = 30,
         },
         new EnemyProperties()
         {
@@ -133,8 +149,8 @@ public class GameSettings : MonoBehaviour
             DetectDistanceMin = 4f,
             DetectDistanceMax = 5.5f,
 
-            SpeedMin = 2f,
-            SpeedMax = 2.5f,
+            SpeedMin = 1.3f,
+            SpeedMax = 1.8f,
 
             Damage = 1.5f,
             AttackCooldown = 1.5f,
@@ -142,6 +158,8 @@ public class GameSettings : MonoBehaviour
             AttackType = eEntityAttackType.Projectile,
             ProjectileSpeed = 5,
             ProjectilePrefabName = "BowProjectileEnemy",
+
+            SpawnCost = 70,
         },
     };
 

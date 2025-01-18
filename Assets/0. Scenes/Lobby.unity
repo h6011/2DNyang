@@ -703,6 +703,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bdd59a5bd5837347a89e09e920ab19c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Score: 0
+  Money: 0
+  AllyBaseHp: 0
+  EnemyBaseHp: 0
+  isGameStarted: 0
+  GameTime: 0
 --- !u!4 &412462711
 Transform:
   m_ObjectHideFlags: 0
@@ -2437,6 +2443,69 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1061990040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1061990042}
+  - component: {fileID: 1061990041}
+  m_Layer: 0
+  m_Name: AudioMng
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1061990041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061990040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d57bfcfd2abf1a84b97418199fb6bc72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Audios:
+  - AudioName: BGM
+    Clip: {fileID: 8300000, guid: ec5b95eb171f89c438b07d73a3835e2a, type: 3}
+  - AudioName: Click
+    Clip: {fileID: 8300000, guid: c2a3e9b78250ba84b9fc67604af0ac6c, type: 3}
+  - AudioName: ShieldAttack
+    Clip: {fileID: 8300000, guid: 89a807e0ab56a354bafbdc003e69e4fa, type: 3}
+  - AudioName: BowAttack
+    Clip: {fileID: 8300000, guid: e126bb3ea8fd6d44f988adf7f43bacb3, type: 3}
+  - AudioName: BowAttackHit
+    Clip: {fileID: 8300000, guid: 7c0534a031d77a6408dd230395d94da7, type: 3}
+  - AudioName: SwordAttack
+    Clip: {fileID: 8300000, guid: 0a26207002703994191fecdf717f1e0a, type: 3}
+  - AudioName: Defeat
+    Clip: {fileID: 8300000, guid: b1a5e457391c1d841b7c1e6df1f03ed0, type: 3}
+  - AudioName: Victory
+    Clip: {fileID: 8300000, guid: 6af5b7f0cfa27594f890cb6916d52270, type: 3}
+  - AudioName: Upgrade
+    Clip: {fileID: 8300000, guid: 6649d8cf8bb08944b8c70ae51d6f2238, type: 3}
+--- !u!4 &1061990042
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061990040}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1063364345
 GameObject:
   m_ObjectHideFlags: 0
@@ -4366,6 +4435,7 @@ SceneRoots:
   - {fileID: 879249034}
   - {fileID: 1878988546}
   - {fileID: 1771937396}
+  - {fileID: 63242880}
   - {fileID: 880207072}
   - {fileID: 412462711}
-  - {fileID: 63242880}
+  - {fileID: 1061990042}

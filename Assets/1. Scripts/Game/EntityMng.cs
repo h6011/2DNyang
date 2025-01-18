@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 
@@ -17,6 +18,19 @@ public class EntityMng : MonoBehaviour
 
     [Header("Vars")]
     public Transform Dynamic;
+
+    [Header("Base Obj")]
+    public Transform allyBase;
+    public Transform enemyBase;
+
+    [Header("For BaseEffect")]
+    private Vector3 SaveAllyBasePos;
+    private Vector3 SaveEnemyBasePos;
+
+    private Coroutine allyCoroutine;
+    private Coroutine enemyCoroutine;
+
+
 
     [Header("Ally ¾Æ±º")]
     public GameObject swordAllyObj;
@@ -44,28 +58,45 @@ public class EntityMng : MonoBehaviour
 
     private void Start()
     {
+        SaveAllyBasePos = allyBase.position;
+        SaveEnemyBasePos = enemyBase.position;
+    }
+
+    private void Update()
+    {
         
     }
 
 
     public void TrySpawnAlly(eAllyType allyType)
     {
-        GameObject obj = null;
 
-        if (allyType == eAllyType.Sword)
+        EntityProperties properties = GameSettings.GetAllyProperties(allyType);
+
+        if (LobbyMng.Instance.money >= properties.SpawnCost)
         {
-            obj = swordAllyObj;
-        }
-        else if (allyType == eAllyType.Shield)
-        {
-            obj = shieldEnemyObj;
-        }
-        else if (allyType == eAllyType.Bow)
-        {
-            obj = bowAllyObj;
+            LobbyMng.Instance.WhenAllySpawn(allyType);
+
+            GameObject obj = null;
+
+            if (allyType == eAllyType.Sword)
+            {
+                obj = swordAllyObj;
+            }
+            else if (allyType == eAllyType.Shield)
+            {
+                obj = shieldAllyObj;
+            }
+            else if (allyType == eAllyType.Bow)
+            {
+                obj = bowAllyObj;
+            }
+
+            GameObject newAlly = Instantiate(obj, AllySpawnPos.position, Quaternion.identity, Dynamic);
         }
 
-        GameObject newAlly = Instantiate(obj, AllySpawnPos.position, Quaternion.identity, Dynamic);
+
+        
 
     }
 
@@ -94,6 +125,56 @@ public class EntityMng : MonoBehaviour
 
 
 
+    private IEnumerator BaseDamageEffectCoroutine(eBaseType baseType)
+    {
+        float duration = 0.2f;
+        float current = 0f;
+        Transform target = null;
+        Vector3 savePos = Vector3.zero;
+
+        if (baseType == eBaseType.Ally)
+        {
+            target = allyBase;
+            savePos = SaveAllyBasePos;
+        }
+        else if (baseType == eBaseType.Enemy)
+        {
+            target = enemyBase;
+            savePos = SaveEnemyBasePos;
+        }
+
+        while (current < duration)
+        {
+            float process = (duration - current) / duration;
+            target.position = savePos + new Vector3(Mathf.Sin(process * 10) / 5, 0);
+            current += Time.deltaTime;
+            yield return null;
+        }
+
+        target.position = savePos;
+
+        yield return null;
+    }
+
+    public void BaseDamagedEffect(eBaseType baseType)
+    {
+        if (baseType == eBaseType.Ally)
+        {
+            if (allyCoroutine != null)
+            {
+                StopCoroutine(allyCoroutine);
+            }
+            allyCoroutine = StartCoroutine(BaseDamageEffectCoroutine(baseType));
+        }
+        else if (baseType == eBaseType.Enemy)
+        {
+            if (enemyCoroutine != null)
+            {
+                StopCoroutine(enemyCoroutine);
+            }
+            enemyCoroutine = StartCoroutine(BaseDamageEffectCoroutine(baseType));
+        }
+    }
 
 
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -87,6 +88,19 @@ public class GameStatus : MonoBehaviour
     {
         _Btn.onClick.RemoveAllListeners();
         _Btn.onClick.AddListener(_Action);
+    }
+
+    public static eBaseType WhatBaseType(Transform Trans)
+    {
+        if (Trans.name == "AllyBase")
+        {
+            return eBaseType.Ally;
+        }
+        else if (Trans.name == "EnemyBase")
+        {
+            return eBaseType.Enemy;
+        }
+        return eBaseType.Enemy;
     }
 
 }

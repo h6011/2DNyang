@@ -55,7 +55,7 @@ public class StageItemScript : MonoBehaviour
         Btn.onClick.AddListener(() =>
         {
             StartCoroutine(whenLoadStageScene());
-
+            AudioMng.Instance.PlayClickAudio();
         });
 
 

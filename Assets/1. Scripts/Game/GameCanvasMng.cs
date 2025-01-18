@@ -22,12 +22,14 @@ public class GameCanvasMng : MonoBehaviour
     public static GameCanvasMng Instance;
 
     private LobbyMng lobbyMng;
+    private AudioMng audioMng;
 
 
 
     [Header("UI")]
     public TMP_Text MoneyTitle;
     public Transform SpawnFrame;
+    public Transform EscapeFrame;
 
     [Header("Prefab")]
     [SerializeField] private GameObject SpawnItemFrame;
@@ -65,9 +67,37 @@ public class GameCanvasMng : MonoBehaviour
     private void Start()
     {
         lobbyMng = LobbyMng.Instance;
+        audioMng = AudioMng.Instance;
 
-        
+        InitSpawnItemFrames();
+        Init();
+    }
 
+
+    private void Update()
+    {
+        MoneyTitleDisplay();
+    }
+
+    private void Init()
+    {
+        int count = transform.childCount;
+        for (int i = 0; i < count; i++)
+        {
+            Transform child = transform.GetChild(i);
+            if (child.name == "Main")
+            {
+                SetVisibleUI(child, true);
+            }
+            else
+            {
+                SetVisibleUI(child, false);
+            }
+        }
+    }
+
+    private void InitSpawnItemFrames()
+    {
         string[] AllyNames = System.Enum.GetNames(typeof(eAllyType));
 
         for (int i = 0; i < AllyNames.Length; i++)
@@ -79,37 +109,57 @@ public class GameCanvasMng : MonoBehaviour
             Button Btn = NewSpawnItemFrame.GetComponent<Button>();
 
             Transform HolderFrame = NewSpawnItemFrame.transform.Find("Holder");
+            Transform TitleTransform = NewSpawnItemFrame.transform.Find("Title");
             Transform EntityImgFrame = HolderFrame.Find("EntityImg");
 
             Image EntityImg = EntityImgFrame.GetComponent<Image>();
             EntityImg.sprite = GetAllyImg(allyType);
 
+            TMP_Text Title = TitleTransform.GetComponent<TMP_Text>();
+            Title.text = $"{GameSettings.GetAllyProperties(allyType).SpawnCost}";
+
             GameStatus.addListenerToBtn(Btn, () =>
             {
                 EntityMng.Instance.TrySpawnAlly(allyType);
+                audioMng.PlayClickAudio();
             });
 
         }
+    }
 
-        //Transform TestSpawnItemFrame = SpawnFrame.Find("SpawnItemFrame");
-        //Button TestSpawnItemFrameButton = TestSpawnItemFrame.GetComponent<Button>();
-
-        //GameStatus.addListenerToBtn(TestSpawnItemFrameButton, () =>
-        //{
-        //    EntityMng.Instance.TrySpawnAlly(eAllyType.Sword);
-        //});
+    private void MoneyTitleDisplay()
+    {
+        MoneyTitle.text = $"{Mathf.FloorToInt(lobbyMng.money)} / {lobbyMng.maxMoney}";
     }
 
 
-    private void Update()
+
+    public void ToggleUI(string Name)
     {
-        MoneyTitle.text = $"Money : {lobbyMng.money} / {lobbyMng.maxMoney}";
+        Transform Find = transform.Find(Name);
+        if (Find)
+        {
+            Find.gameObject.SetActive(!Find.gameObject.activeSelf);
+        }
+    }
 
-        //int SpawnFrameCount = SpawnFrame.childCount;
+    public void ToggleUI(Transform Trs)
+    {
+        Trs.gameObject.SetActive(!Trs.gameObject.activeSelf);
+    }
 
-        //Debug.Log($"SpawnFrameCount : {SpawnFrameCount}");
-        //SpawnFrame.offsetMin = new Vector2(0f, 0f);
-        //SpawnFrame.offsetMax = new Vector2((100 * SpawnFrameCount), 100);
+    public void SetVisibleUI(string Name, bool Visible)
+    {
+        Transform Find = transform.Find(Name);
+        if (Find)
+        {
+            Find.gameObject.SetActive(Visible);
+        }
+    }
+
+    public void SetVisibleUI(Transform Trs, bool Visible)
+    {
+        Trs.gameObject.SetActive(Visible);
     }
 
 

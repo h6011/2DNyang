@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class LobbyCanvasMng : MonoBehaviour
 {
+    AudioMng audioMng;
+
 
     public static LobbyCanvasMng Instance;
 
@@ -77,8 +79,12 @@ public class LobbyCanvasMng : MonoBehaviour
 
     
 
+    
+
     private void Start()
     {
+        audioMng = AudioMng.Instance;
+
         SetUpStageUI();
 
         VisibleUIExpectOther("Main");
@@ -86,21 +92,30 @@ public class LobbyCanvasMng : MonoBehaviour
         addListenerToBtn(PlayBtn, () =>
         {
             VisibleUIExpectOther("Stage");
+            audioMng.PlayClickAudio();
+        });
+
+        addListenerToBtn(ShopBtn, () =>
+        {
+            audioMng.PlayClickAudio();
         });
 
         addListenerToBtn(ExitGameBtn, () =>
         {
             ApplicationQuitMng.Instance.ExitGame();
+            audioMng.PlayClickAudio();
         });
 
         addListenerToBtn(NoticeExitUI_YesBtn, () =>
         {
             ApplicationQuitMng.Instance.TryQuitGame();
+            audioMng.PlayClickAudio();
         });
 
         addListenerToBtn(NoticeExitUI_NoBtn, () =>
         {
             ApplicationQuitMng.Instance.TryCancelQuitGame();
+            audioMng.PlayClickAudio();
         });
 
 

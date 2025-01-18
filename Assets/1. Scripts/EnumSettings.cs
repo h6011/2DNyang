@@ -30,6 +30,11 @@ public enum eEntityAttackType
 }
 
 
+public enum eBaseType
+{
+    Ally,
+    Enemy
+}
 
 
 

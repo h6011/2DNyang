@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -6441804544597013734}
   - component: {fileID: -713877000944331677}
   - component: {fileID: 9069692933239097945}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BowProjectileAlly
   m_TagString: Untagged
   m_Icon: {fileID: 0}

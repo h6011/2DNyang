@@ -66,6 +66,12 @@ public class ProjectileCtrl : MonoBehaviour
         rb.velocity = new Vector2(IntegerForMove * ProjectilePower, 0);
     }
 
+    private void PlayBowAttackHitSound()
+    {
+        AudioMng.Instance.PlayAudio("BowAttackHit", 0.1f, false);
+    }
+
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
@@ -75,19 +81,44 @@ public class ProjectileCtrl : MonoBehaviour
         {
             if (!IsDestroyed)
             {
-                EntityCtrl entityCtrl = collision.transform.parent.GetComponent<EntityCtrl>();
-                if (entityCtrl != null)
+                bool IsSuccess = GameMng.Instance.TryDamage(collision.transform.parent, 1f);
+                if (IsSuccess)
                 {
                     IsDestroyed = true;
-                    entityCtrl.GetAttacked(1f);
+                    PlayBowAttackHitSound();
+                    DestroySelf();
+                }
+            }
+        }
+        else if (collision.CompareTag("Base"))
+        {
+            eBaseType baseType = GameStatus.WhatBaseType(collision.transform);
+            if (IsEnemyProjectile && baseType == eBaseType.Ally)
+            {
+                bool IsSuccess = GameMng.Instance.TryDamage(collision.transform, 1f);
+                if (IsSuccess)
+                {
+                    IsDestroyed = true;
+                    PlayBowAttackHitSound();
+                    DestroySelf();
+                }
+            }
+            else if (!IsEnemyProjectile && baseType == eBaseType.Enemy)
+            {
+                bool IsSuccess = GameMng.Instance.TryDamage(collision.transform, 1f);
+                if (IsSuccess)
+                {
+                    IsDestroyed = true;
+                    PlayBowAttackHitSound();
                     DestroySelf();
                 }
             }
         }
 
-        
 
-        
+
+
+
     }
 
 

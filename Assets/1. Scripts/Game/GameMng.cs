@@ -8,6 +8,8 @@ public class GameMng : MonoBehaviour
 
     public static GameMng Instance;
 
+
+
     private void Awake()
     {
         
@@ -50,8 +52,50 @@ public class GameMng : MonoBehaviour
     }
 
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            bool IsGamePaused = LobbyMng.Instance.TryEscape();
+            GameCanvasMng.Instance.SetVisibleUI("Escape", IsGamePaused);
+            if (IsGamePaused)
+            {
+                AudioMng.Instance.PauseAllAudio();
+            }
+            else
+            {
+                AudioMng.Instance.UnpauseAllAudio();
+            }
+        }
+    }
+
+    
+
+    public bool TryDamage(Transform TargetTrans, float Damage)
+    {
+        if (TargetTrans)
+        {
+            if (TargetTrans.CompareTag("Base"))
+            {
+                LobbyMng.Instance.BaseGetDamage(GameStatus.WhatBaseType(TargetTrans), Damage);
+                EntityMng.Instance.BaseDamagedEffect(GameStatus.WhatBaseType(TargetTrans));
+                return true;
+            }
+            else
+            {
+                EntityCtrl entityCtrl = TargetTrans.GetComponent<EntityCtrl>();
+                if (entityCtrl && entityCtrl.GetHp() > 0)
+                {
+                    entityCtrl.GetAttacked(Damage);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 
+    
 
 
 }
