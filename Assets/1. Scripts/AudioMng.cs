@@ -83,7 +83,7 @@ public class AudioMng : MonoBehaviour
         Transform Find = transform.Find(PathName);
         if (Find)
         {
-            Destroy(Find);
+            Destroy(Find.gameObject);
         }
     }
 

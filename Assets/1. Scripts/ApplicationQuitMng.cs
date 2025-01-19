@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ApplicationQuitMng : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class ApplicationQuitMng : MonoBehaviour
     {
         LobbyCanvasMngCheck();
         Application.wantsToQuit += WhenApplicationQuit;
+
     }
 
     /// <summary>
@@ -70,15 +72,36 @@ Application.Quit();
         lobbyCanvasMng.VisibleUIExpectOther("Main");
     }
 
+    private bool IsAltF4()
+    {
+        if (Input.GetKey(KeyCode.LeftAlt))
+        {
+            return true;
+        }
+        return false;
+    }
+
 
     private bool WhenApplicationQuit()
     {
         if (!CanExitGame)
         {
-            if (lobbyCanvasMng)
+            if (SceneManager.GetActiveScene().name == "Lobby")
             {
-                lobbyCanvasMng.VisibleUIExpectOther("NoticeExit");
+                if (lobbyCanvasMng != null)
+                {
+                    lobbyCanvasMng.VisibleUIExpectOther("NoticeExit");
+                }
             }
+            else if (SceneManager.GetActiveScene().name == "Game")
+            {
+                LobbyMng.Instance.PauseGame(true);
+            }
+        }
+
+        if (IsAltF4())
+        {
+            return true;
         }
 
         return CanExitGame;

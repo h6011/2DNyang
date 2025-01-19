@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.VFX;
+
 
 
 
@@ -19,10 +20,13 @@ public class GameCanvasMng : MonoBehaviour
         public Sprite Sprite;
     }
 
+    [Header("SELF MNG")]
     public static GameCanvasMng Instance;
 
+    [Header("Mngs")]
     private LobbyMng lobbyMng;
     private AudioMng audioMng;
+    private PrefabMng prefabMng;
 
 
 
@@ -31,8 +35,16 @@ public class GameCanvasMng : MonoBehaviour
     public Transform SpawnFrame;
     public Transform EscapeFrame;
 
+    [Header("Escape Buttons")]
+    public Button BackBtn;
+
+    [Header("GameResult Buttons")]
+    public Button BackToLobbyBtn;
+    public Button RestartBtn;
+
+
     [Header("Prefab")]
-    [SerializeField] private GameObject SpawnItemFrame;
+    private GameObject SpawnItemFrame;
 
     [Header("Data")]
     public List<AllyImgDataClass> AllyImgData = new List<AllyImgDataClass>();
@@ -54,6 +66,31 @@ public class GameCanvasMng : MonoBehaviour
 
     private void Awake()
     {
+        INIT_SELF_MNG();
+    }
+
+    private void Start()
+    {
+        lobbyMng = LobbyMng.Instance;
+        audioMng = AudioMng.Instance;
+        prefabMng = PrefabMng.Instance;
+
+        SpawnItemFrame = prefabMng.GetPrefabByName("SpawnItemFrame");
+
+        InitSpawnItemFrames();
+        Init();
+
+
+    }
+
+
+    private void Update()
+    {
+        MoneyTitleDisplay();
+    }
+
+    private void INIT_SELF_MNG()
+    {
         if (Instance == null)
         {
             Instance = this;
@@ -64,36 +101,33 @@ public class GameCanvasMng : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        lobbyMng = LobbyMng.Instance;
-        audioMng = AudioMng.Instance;
-
-        InitSpawnItemFrames();
-        Init();
-    }
-
-
-    private void Update()
-    {
-        MoneyTitleDisplay();
-    }
-
     private void Init()
     {
-        int count = transform.childCount;
-        for (int i = 0; i < count; i++)
+        InitStartFrames();
+
+
+
+        GameStatus.addListenerToBtn(BackBtn, () =>
         {
-            Transform child = transform.GetChild(i);
-            if (child.name == "Main")
-            {
-                SetVisibleUI(child, true);
-            }
-            else
-            {
-                SetVisibleUI(child, false);
-            }
-        }
+            lobbyMng.UnpauseGame(true);
+            audioMng.PlayClickAudio();
+        });
+
+
+
+        GameStatus.addListenerToBtn(BackToLobbyBtn, () =>
+        {
+            SceneManager.LoadScene("Lobby");
+            audioMng.PlayClickAudio();
+            lobbyMng.UnpauseGame(false);
+        });
+
+        GameStatus.addListenerToBtn(RestartBtn, () =>
+        {
+            SceneManager.LoadScene("Game");
+            audioMng.PlayClickAudio();
+        });
+
     }
 
     private void InitSpawnItemFrames()
@@ -127,10 +161,29 @@ public class GameCanvasMng : MonoBehaviour
         }
     }
 
+    private void InitStartFrames()
+    {
+        int count = transform.childCount;
+        for (int i = 0; i < count; i++)
+        {
+            Transform child = transform.GetChild(i);
+            if (child.name == "Main")
+            {
+                SetVisibleUI(child, true);
+            }
+            else
+            {
+                SetVisibleUI(child, false);
+            }
+        }
+    }
+
     private void MoneyTitleDisplay()
     {
         MoneyTitle.text = $"{Mathf.FloorToInt(lobbyMng.money)} / {lobbyMng.maxMoney}";
     }
+
+
 
 
 

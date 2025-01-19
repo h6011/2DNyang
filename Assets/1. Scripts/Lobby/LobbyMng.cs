@@ -14,13 +14,14 @@ public class LobbyMng : MonoBehaviour
     [SerializeField] private float AllyBaseHp;
     [SerializeField] private float EnemyBaseHp;
 
-    private bool IsGamePaused = false;
+   
 
     private float MoneyMulti = 15f;
 
     [Header("InGame Stat")]
 
-    [SerializeField] private bool isGameStarted;
+    [SerializeField] private bool IsGamePaused = false;
+    [SerializeField] private bool isGameStarted = false;
     [SerializeField] private float GameTime;
 
 
@@ -62,8 +63,8 @@ public class LobbyMng : MonoBehaviour
     {
         GameTime = 0;
         Money = 0;
-        AllyBaseHp = 1000;
-        EnemyBaseHp = 1000;
+        AllyBaseHp = 100;
+        EnemyBaseHp = 100;
     }
 
 
@@ -82,15 +83,47 @@ public class LobbyMng : MonoBehaviour
     }
 
 
+    IEnumerator BaseGotDestoyedCoroutine()
+    {
+        
+        yield return null;
+    }
+
+
+    private void BaseGotDestroyed(eBaseType baseType)
+    {
+        if (isGameStarted)
+        {
+            isGameStarted = false;
+
+            GameCanvasMng.Instance.SetVisibleUI("GameResult", true);
+
+            EntityMng.Instance.BaseDestroyedEffect(baseType);
+
+            //PauseGame(false);
+
+
+
+        }
+    }
+
     public void BaseGetDamage(eBaseType baseType, float Damage = 0)
     {
         if (baseType == eBaseType.Ally)
         {
             AllyBaseHp -= Damage;
+            if (AllyBaseHp <= 0)
+            {
+                BaseGotDestroyed(baseType);
+            }
         }
         else if (baseType == eBaseType.Enemy)
         {
             EnemyBaseHp -= Damage;
+            if (EnemyBaseHp <= 0)
+            {
+                BaseGotDestroyed(baseType);
+            }
         }
     }
 
@@ -103,23 +136,55 @@ public class LobbyMng : MonoBehaviour
     {
         Time.timeScale = 0;
     }
+    
+    private void EscapeUIVisible(bool VisibleBool)
+    {
+        GameCanvasMng.Instance.SetVisibleUI("Escape", VisibleBool);
+    }
 
-    /// <summary>
-    /// Return IsGamePaused
-    /// </summary>
-    /// <returns></returns>
-    public bool TryEscape()
+    public void PauseGame(bool UIVisible = false)
+    {
+        if (!IsGamePaused)
+        {
+            IsGamePaused = true;
+            PauseGameTime();
+            AudioMng.Instance.PauseAllAudio();
+            if (UIVisible)
+            {
+                EscapeUIVisible(IsGamePaused);
+            }
+        }
+    }
+
+    public void UnpauseGame(bool UIVisible = false)
     {
         if (IsGamePaused)
         {
             IsGamePaused = false;
             StartGameTime();
+            AudioMng.Instance.UnpauseAllAudio();
+            if (UIVisible)
+            {
+                EscapeUIVisible(IsGamePaused);
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Return IsGamePaused
+    /// </summary>
+    /// <returns></returns>
+    public bool TryEscape(bool UIVisible = false)
+    {
+        if (IsGamePaused)
+        {
+            UnpauseGame(UIVisible);
             return IsGamePaused;
         }
         else
         {
-            IsGamePaused = true;
-            PauseGameTime();
+            PauseGame(UIVisible);
             return IsGamePaused;
         }
     }
@@ -128,9 +193,6 @@ public class LobbyMng : MonoBehaviour
     {
         return IsGamePaused;
     }
-
-
-
 
 
     private void Update()

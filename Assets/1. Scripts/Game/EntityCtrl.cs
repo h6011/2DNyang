@@ -49,6 +49,9 @@ public class EntityCtrl : MonoBehaviour
     protected float KnockbackForceFieldTime = 0.1f;
 
 
+    protected bool GAME_END = false;
+
+
     private void OnValidate()
     {
         
@@ -73,12 +76,14 @@ public class EntityCtrl : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        if (GAME_END) { return; }
         if (IsDead) { return; }
         RigidBodyControlAction();
     }
 
     protected virtual void Update()
     {
+        if (GAME_END) { return; }
         if (IsDead) { return; }
         TickAction();
 
@@ -155,15 +160,20 @@ public class EntityCtrl : MonoBehaviour
         return Hp;
     }
 
+    public void WhenGAME_END()
+    {
+        GAME_END = true;
+    }
 
 
     /// <summary>
     /// 데미지 받는 함수
     /// </summary>
     /// <param name="Damage"></param>
-    protected void GetDamage(float Damage)
+    protected bool GetDamage(float Damage)
     {
-        if (IsDead == false && Hp > 0)
+        if (GAME_END) { return false; }
+        if (IsDead == false && Hp > 0 && !IsDead && !IsKnockbacked)
         {
 
             Hp -= Damage;
@@ -171,36 +181,62 @@ public class EntityCtrl : MonoBehaviour
             if (Hp <= 0)
             {
                 IsDead = true;
-                GetKnockback();
+                GetKnockback(true);
                 animator.SetBool("IsDead", true);
+                return true;
             }
             else if (Hp <= MaxHp * 1/2)
             {
                 if (!KnockbackDebounce)
                 {
                     KnockbackDebounce = true;
-                    GetKnockback();
+                    GetKnockback(false);
+                    return true;
                 }
             }
-
+            return true;
+            
         }
+        return false;
     }
 
     /// <summary>
     /// 넉백 받는 함수
     /// </summary>
-    protected void GetKnockback()
+    protected void GetKnockback(bool StrongKnockback = true)
     {
         if (IsKnockbacked == false)
         {
             KnockbackForceFieldTick = KnockbackForceFieldTime;
             IsKnockbacked = true;
 
+            Vector2 Dir = Vector2.zero;
+
+            if (StrongKnockback)
+            {
+                Dir = new Vector2(4, 4);
+            }
+            else
+            {
+                Dir = new Vector2(2, 2);
+            }
+
             animator.SetTrigger("Hit");
 
-            rb.AddForce(new Vector2(-IntegerForMove * 4, 4), ForceMode2D.Impulse);
+            rb.AddForce(new Vector2(-IntegerForMove * Dir.x, Dir.y), ForceMode2D.Impulse);
 
         }
+    }
+
+
+    /// <summary>
+    /// Use This When Have to Attack This Entity
+    /// </summary>
+    /// <param name="Damage"></param>
+    public bool GetAttacked(float Damage = 1)
+    {
+        //animator.SetTrigger("Hit");
+        return GetDamage(Damage);
     }
 
     /// <summary>
@@ -209,7 +245,7 @@ public class EntityCtrl : MonoBehaviour
     /// <returns></returns>
     protected bool IsGrounded()
     {
-        RaycastHit2D raycastHit2D = Physics2D.Raycast(HitboxTrans.position, Vector2.down, .5f, LayerMask.GetMask("Ground"));
+        RaycastHit2D raycastHit2D = Physics2D.Raycast(HitboxTrans.position, Vector2.down, .51f, LayerMask.GetMask("Ground"));
         if (raycastHit2D && raycastHit2D.collider)
         {
             return true;
@@ -347,16 +383,7 @@ public class EntityCtrl : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// Use This When Have to Attack This Entity
-    /// </summary>
-    /// <param name="Damage"></param>
-
-    public void GetAttacked(float Damage = 1)
-    {
-        //animator.SetTrigger("Hit");
-        GetDamage(Damage);
-    }
+    
 
 
     protected void MeleeAttack()
@@ -410,6 +437,7 @@ public class EntityCtrl : MonoBehaviour
 
     public virtual void OnDeadAnimationEvent()
     {
+        entityMng.WhenEntityDead(gameObject);
         Destroy(gameObject);
     }
 

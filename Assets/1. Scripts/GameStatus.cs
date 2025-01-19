@@ -10,8 +10,10 @@ using UnityEngine;
 
 public class EnemyListArg
 {
-    public eEnemyType enemyType;
-    public int count;
+    public eEnemyType EnemyType;
+    public int Count;
+    public float Delay;
+    public float BreakTime;
 }
 
 
@@ -39,6 +41,7 @@ public class GameStatus : MonoBehaviour
 
     public static List<StageInfoClass> StageInfos = new List<StageInfoClass>()
     {
+        new StageInfoClass() { index = 0, name = "Tutorial" },
         new StageInfoClass() { index = 1, name = "Stage1" },
         new StageInfoClass() { index = 2, name = "Stage2" }
     };
@@ -47,10 +50,25 @@ public class GameStatus : MonoBehaviour
     public static bool isLobbyLoaded = false;
     public static int CurrentLevel = 0;
 
-    
+
 
     public static List<StageWaveInfoArg> StageWaveInfo = new List<StageWaveInfoArg>()
     {
+        new StageWaveInfoArg()
+        {
+            wave = 0,
+            arg = new List<EnemyListArg>()
+            {
+                new EnemyListArg()
+                {
+                    EnemyType = eEnemyType.Sword,
+                    Count = 0,
+                    Delay = 0f,
+                    BreakTime = 100f,
+                },
+            }
+        },
+
         new StageWaveInfoArg()
         {
             wave = 1,
@@ -58,13 +76,24 @@ public class GameStatus : MonoBehaviour
             {
                 new EnemyListArg()
                 {
-                    enemyType = eEnemyType.Sword,
-                    count = 3,
+                    EnemyType = eEnemyType.Sword,
+                    Count = 1,
+                    Delay = 0f,
+                    BreakTime = 6f,
                 },
+            }
+        },
+        new StageWaveInfoArg()
+        {
+            wave = 2,
+            arg = new List<EnemyListArg>()
+            {
                 new EnemyListArg()
                 {
-                    enemyType = eEnemyType.Sword,
-                    count = 0,
+                    EnemyType = eEnemyType.Sword,
+                    Count = 1,
+                    Delay = 0f,
+                    BreakTime = 5f,
                 },
             }
         }

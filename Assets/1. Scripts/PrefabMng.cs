@@ -20,9 +20,18 @@ public class PrefabMng : MonoBehaviour
 
     private void Awake()
     {
+        INIT_SELF_MNG();
+    }
+
+    /// <summary>
+    /// Instance = this;
+    /// </summary>
+    private void INIT_SELF_MNG()
+    {
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -30,6 +39,11 @@ public class PrefabMng : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Get Prefab By Name, Using Already Specified Data
+    /// </summary>
+    /// <param name="Name"></param>
+    /// <returns></returns>
     public GameObject GetPrefabByName(string Name)
     {
         int count = PrefabSettings.Count;

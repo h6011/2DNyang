@@ -63,7 +63,7 @@ public class GameCamMng : MonoBehaviour
 
     private void MoveCamera(float Horizontal)
     {
-            float CameraPosX = mainCam.transform.position.x + Horizontal * cameraMoveSpeed * Time.unscaledDeltaTime;
+        float CameraPosX = mainCam.transform.position.x + Horizontal * cameraMoveSpeed * Time.unscaledDeltaTime;
 
         Vector3 mainCamPos = mainCam.transform.position;
         mainCam.transform.position = new Vector3(CameraPosX, mainCamPos.y, mainCamPos.z);

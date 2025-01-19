@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class GameMng : MonoBehaviour
 
     public static GameMng Instance;
 
+    private List<Coroutine> EnemySpawnLoopCoroutines = new List<Coroutine>();
 
 
     private void Awake()
@@ -22,33 +24,48 @@ public class GameMng : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    
+    IEnumerator EnemySpawnLoopCoroutine(EnemyListArg arg)
+    {
+        bool STOP_LOOP = false;
 
+        while (!STOP_LOOP)
+        {
 
-    private void Start()
+            int allyListArgCount = arg.Count;
+            for (int jNum = 0; jNum < allyListArgCount; jNum++)
+            {
+                EntityMng.Instance.TrySpawnEnemy(arg.EnemyType);
+                yield return new WaitForSeconds(arg.Delay);
+            }
+
+            yield return new WaitForSeconds(arg.BreakTime);
+
+            yield return null;
+        }
+
+    }
+
+    IEnumerator WaveCoroutine()
     {
         int currentLevel = GameStatus.CurrentLevel;
         Debug.Log($"Current Level : {currentLevel}");
-
 
         List<EnemyListArg> args = GameStatus.GetStageWaveInfoByWave(currentLevel);
         int argsCount = args.Count;
         for (int iNum = 0; iNum < args.Count; iNum++)
         {
-            EnemyListArg allyListArg = args[iNum];
-            int allyListArgCount = allyListArg.count;
-            for (int jNum = 0; jNum < allyListArgCount; jNum++)
-            {
-                EntityMng.Instance.TrySpawnEnemy(allyListArg.enemyType);
-            }
-
+            Coroutine coroutine = StartCoroutine(EnemySpawnLoopCoroutine(args[iNum]));
+            EnemySpawnLoopCoroutines.Add(coroutine);
         }
 
 
+        yield return null;
+    }
 
-        for (int i = 0; i < 3; i++)
-        {
-            EntityMng.Instance.TrySpawnAlly(eAllyType.Sword);
-        }
+    private void Start()
+    {
+        StartCoroutine(WaveCoroutine());
     }
 
 
@@ -56,21 +73,18 @@ public class GameMng : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            bool IsGamePaused = LobbyMng.Instance.TryEscape();
-            GameCanvasMng.Instance.SetVisibleUI("Escape", IsGamePaused);
-            if (IsGamePaused)
-            {
-                AudioMng.Instance.PauseAllAudio();
-            }
-            else
-            {
-                AudioMng.Instance.UnpauseAllAudio();
-            }
+            LobbyMng.Instance.TryEscape(true);
+            
         }
     }
 
     
-
+    /// <summary>
+    /// Damaging Function Core
+    /// </summary>
+    /// <param name="TargetTrans">Target (Entity, Base)</param>
+    /// <param name="Damage">Damage Amount</param>
+    /// <returns></returns>
     public bool TryDamage(Transform TargetTrans, float Damage)
     {
         if (TargetTrans)
@@ -86,8 +100,8 @@ public class GameMng : MonoBehaviour
                 EntityCtrl entityCtrl = TargetTrans.GetComponent<EntityCtrl>();
                 if (entityCtrl && entityCtrl.GetHp() > 0)
                 {
-                    entityCtrl.GetAttacked(Damage);
-                    return true;
+                    bool IsSuccess = entityCtrl.GetAttacked(Damage);
+                    return IsSuccess;
                 }
             }
         }
