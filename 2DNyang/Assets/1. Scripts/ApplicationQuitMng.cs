@@ -99,6 +99,8 @@ Application.Quit();
             }
         }
 
+        DebugCanvasMng.Instance.ShowText(SceneManager.GetActiveScene().name);
+
         if (IsAltF4())
         {
             return true;

@@ -37,6 +37,7 @@ public class GameCanvasMng : MonoBehaviour
 
     [Header("Escape Buttons")]
     public Button BackBtn;
+    public Button ExitBtn;
 
     [Header("GameResult Buttons")]
     public Button BackToLobbyBtn;
@@ -112,6 +113,14 @@ public class GameCanvasMng : MonoBehaviour
             lobbyMng.UnpauseGame(true);
             audioMng.PlayClickAudio();
         });
+
+        GameStatus.addListenerToBtn(ExitBtn, () =>
+        {
+            lobbyMng.UnpauseGame(true);
+            audioMng.PlayClickAudio();
+            SceneManager.LoadScene("Lobby");
+        });
+
 
 
 

@@ -132,4 +132,17 @@ public class GameStatus : MonoBehaviour
         return eBaseType.Enemy;
     }
 
+    public static float GetTruncatedFloat(float targetFloat)
+    {
+        float truncatedFloat = Mathf.Floor(targetFloat * 10f) / 10f;
+        return truncatedFloat;
+    }
+
+
+
+
+
+
+
+
 }

@@ -1,20 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Audio;
 
 [System.Serializable]
 public class AudioArg
 {
     public string AudioName;
     public AudioClip Clip;
+    public AudioMixerGroup audioMixerGroup;
 }
 
 public class AudioMng : MonoBehaviour
 {
     public static AudioMng Instance;
 
+    public AudioMixer mainAudioMixer;
+
     public List<AudioArg> Audios;
+    AudioMixer audioMixer;
 
     public AudioClip GetAudioClip(string Name)
     {
@@ -25,6 +29,20 @@ public class AudioMng : MonoBehaviour
             if (arg.AudioName == Name)
             {
                 return arg.Clip;
+            }
+        }
+        return null;
+    }
+
+    public AudioArg GetAudioInfo(string Name)
+    {
+        int count = Audios.Count;
+        for (int i = 0; i < count; i++)
+        {
+            AudioArg arg = Audios[i];
+            if (arg.AudioName == Name)
+            {
+                return arg;
             }
         }
         return null;
@@ -43,6 +61,11 @@ public class AudioMng : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+
+    }
+
     private string GetPath(string Name)
     {
         string Path = $"NewAudio-{Name}";
@@ -51,17 +74,18 @@ public class AudioMng : MonoBehaviour
 
     public void PlayAudio(string Name, float Volume, bool Looped)
     {
-        AudioClip AudioClip = GetAudioClip(Name);
-        if (AudioClip)
+        AudioArg Arg = GetAudioInfo(Name);
+        if (Arg != null)
         {
             string PathName = GetPath(Name);
             GameObject NewGameObject = new GameObject(PathName);
             NewGameObject.transform.SetParent(transform);
 
             AudioSource NewAudioSource = NewGameObject.AddComponent<AudioSource>();
-            NewAudioSource.clip = AudioClip;
+            NewAudioSource.clip = Arg.Clip;
             NewAudioSource.volume = Volume;
             NewAudioSource.loop = Looped;
+            NewAudioSource.outputAudioMixerGroup = Arg.audioMixerGroup;
             NewAudioSource.Play();
 
             if (!Looped)

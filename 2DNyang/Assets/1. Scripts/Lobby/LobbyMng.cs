@@ -46,6 +46,18 @@ public class LobbyMng : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        SettingsArgs args = SettingsMng.Instance.GetSettings();
+        SettingsMng.Instance.ApplySettings(args);
+
+        //QualitySettings.vSyncCount = 0;
+
+        //Debug.Log(AudioListener.volume);
+    }
+
+    
+
     public void WhenAllySpawn(eAllyType allyType)
     {
         Money -= GameSettings.GetAllyProperties(allyType).SpawnCost;
