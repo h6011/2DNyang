@@ -30,6 +30,7 @@ public class EntityMng : MonoBehaviour
     private Coroutine enemyCoroutine;
 
     private bool NoLongerBaseDamageEffect;
+    private bool NoLongerEnemyBaseKnockback;
 
 
     [Header("Ally Prefab")]
@@ -39,6 +40,7 @@ public class EntityMng : MonoBehaviour
 
     [Header("Enemy Prefab")]
     public GameObject swordEnemyObj;
+    public GameObject upgradedSwordEnemyObj;
     public GameObject shieldEnemyObj;
     public GameObject bowEnemyObj;
 
@@ -114,6 +116,10 @@ public class EntityMng : MonoBehaviour
         if (enemyType == eEnemyType.Sword)
         {
             obj = swordEnemyObj;
+        }
+        else if (enemyType == eEnemyType.UpgradedSword)
+        {
+            obj = upgradedSwordEnemyObj;
         }
         else if (enemyType == eEnemyType.Shield)
         {
@@ -272,7 +278,7 @@ public class EntityMng : MonoBehaviour
             EntityCtrl entityCtrl = entity.GetComponent<EntityCtrl>();
             if (entity != null && entityCtrl != null)
             {
-                Debug.Log(entityCtrl);
+                //Debug.Log(entityCtrl);
                 entityCtrl.WhenGAME_END();
             }
         }
@@ -282,7 +288,19 @@ public class EntityMng : MonoBehaviour
         EntityList.Remove(EntityObj);
     }
 
-
+    public void KnockbackAllies(Vector2 KnockbackAmount)
+    {
+        int count = EntityList.Count;
+        for (int i = 0; i < count; i++)
+        {
+            GameObject entity = EntityList[i];
+            AllyCtrl allyCtrl = entity.GetComponent<AllyCtrl>();
+            if (entity != null && allyCtrl != null)
+            {
+                allyCtrl.GetKnockback(KnockbackAmount);
+            }
+        }
+    }
 
 
 

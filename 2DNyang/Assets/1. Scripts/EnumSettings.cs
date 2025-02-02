@@ -18,6 +18,7 @@ public enum eAllyType
 public enum eEnemyType
 {
     Sword,
+    UpgradedSword,
     Shield,
     Bow,
 }

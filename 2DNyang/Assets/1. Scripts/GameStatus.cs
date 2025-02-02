@@ -51,6 +51,13 @@ public class GameStatus : MonoBehaviour
     public static int CurrentLevel = 0;
 
 
+    public static List<StageInfoClass> GetAvailableStageInfos()
+    {
+        List<StageInfoClass> New = new List<StageInfoClass>(StageInfos);
+        New.RemoveAt(0);
+        return New;
+    }
+
 
     public static List<StageWaveInfoArg> StageWaveInfo = new List<StageWaveInfoArg>()
     {

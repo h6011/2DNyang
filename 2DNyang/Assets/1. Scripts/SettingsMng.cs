@@ -30,7 +30,7 @@ public class SettingsMng : MonoBehaviour
     public static SettingsMng Instance;
 
 
-    private string FileName = "Test.txt";
+    private string FileName = "Settings.txt";
     public string FixedPath = string.Empty;
 
     private SettingsArgs CurrentSettings;
@@ -59,7 +59,6 @@ public class SettingsMng : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {

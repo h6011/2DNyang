@@ -23,6 +23,10 @@ public class LobbyCanvasMng : MonoBehaviour
     public Button NoticeExitUI_YesBtn;
     public Button NoticeExitUI_NoBtn;
 
+    [Header("Stage UI")]
+    public Button Stage_BackBtn;
+
+
     [Header("Prefab")]
 
     public GameObject StageItem;
@@ -58,8 +62,14 @@ public class LobbyCanvasMng : MonoBehaviour
 
     private void SetUpStageUI()
     {
-        List<GameStatus.StageInfoClass> Infos = GameStatus.StageInfos;
+        List<GameStatus.StageInfoClass> Infos = GameStatus.GetAvailableStageInfos();
         int count = Infos.Count;
+
+        PlayerDataArgs args = PlayerDataMng.Instance.GetData();
+
+        List<IsStageClearArg> isStageClearArgs = args.IsStageClearArg;
+        int isStageClearArgsCount = isStageClearArgs.Count;
+
 
         for (int i = 0; i < count; i++)
         {
@@ -70,6 +80,16 @@ public class LobbyCanvasMng : MonoBehaviour
             stageItemScript.ChangeText(Info.index.ToString());
             stageItemScript.ChangeLevel(Info.index);
 
+            for (int i2 = 0; i2 < isStageClearArgsCount; i2++)
+            {
+                IsStageClearArg arg = isStageClearArgs[i2];
+                if (arg.StageNum == Info.index)
+                {
+                    Color AlreadyClearedColor = new Color() { a = 1, r = 0.9297475f, g = 1, b = 0.495283f };
+                    stageItemScript.ChangeColor(AlreadyClearedColor);
+                    break;
+                }
+            }
 
 
 
@@ -125,17 +145,29 @@ public class LobbyCanvasMng : MonoBehaviour
             audioMng.PlayClickAudio();
         });
 
+        addListenerToBtn(Stage_BackBtn, () =>
+        {
+            VisibleUIExpectOther("Main");
+            audioMng.PlayClickAudio();
+        });
+
 
 
     }
 
-    
-
-   
 
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            VisibleUIExpectOther("Main");
+        }
+    }
 
-    
+
+
+
 
 
     public void VisibleUI(string name)

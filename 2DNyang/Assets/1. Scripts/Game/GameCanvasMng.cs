@@ -41,6 +41,7 @@ public class GameCanvasMng : MonoBehaviour
 
     [Header("GameResult Buttons")]
     public Button BackToLobbyBtn;
+    public Button SettingsBtn;
     public Button RestartBtn;
 
 
@@ -130,6 +131,14 @@ public class GameCanvasMng : MonoBehaviour
             audioMng.PlayClickAudio();
             lobbyMng.UnpauseGame(false);
         });
+
+        GameStatus.addListenerToBtn(SettingsBtn, () =>
+        {
+            SceneManager.LoadScene("Settings", LoadSceneMode.Additive);
+            audioMng.PlayClickAudio();
+            //lobbyMng.UnpauseGame(false);
+        });
+
 
         GameStatus.addListenerToBtn(RestartBtn, () =>
         {

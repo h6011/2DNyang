@@ -7,14 +7,18 @@ public class LobbyMng : MonoBehaviour
 
     public static LobbyMng Instance;
 
+    [Header("Stat")]
     [SerializeField] private float Score;
     [SerializeField] private float Money;
     private float MaxMoney = 2000;
 
+    [Header("Hp")]
     [SerializeField] private float AllyBaseHp;
     [SerializeField] private float EnemyBaseHp;
 
-   
+    [SerializeField] private float AllyBaseMaxHp = 100;
+    [SerializeField] private float EnemyBaseMaxHp = 100;
+
 
     private float MoneyMulti = 15f;
 
@@ -23,6 +27,7 @@ public class LobbyMng : MonoBehaviour
     [SerializeField] private bool IsGamePaused = false;
     [SerializeField] private bool isGameStarted = false;
     [SerializeField] private float GameTime;
+    [SerializeField] private bool NoLongerEnemyBaseKnockback = false;
 
 
     public float score => Score;
@@ -38,7 +43,7 @@ public class LobbyMng : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -75,8 +80,8 @@ public class LobbyMng : MonoBehaviour
     {
         GameTime = 0;
         Money = 0;
-        AllyBaseHp = 100;
-        EnemyBaseHp = 100;
+        AllyBaseHp = AllyBaseMaxHp;
+        EnemyBaseHp = EnemyBaseMaxHp;
     }
 
 
@@ -87,6 +92,7 @@ public class LobbyMng : MonoBehaviour
     {
         ResetGameStat();
         isGameStarted = true;
+        NoLongerEnemyBaseKnockback = false;
 
         Time.timeScale = 1;
 
@@ -112,12 +118,19 @@ public class LobbyMng : MonoBehaviour
 
             EntityMng.Instance.BaseDestroyedEffect(baseType);
 
+            if (baseType == eBaseType.Enemy)
+            {
+                PlayerDataMng.Instance.OnClearedStage(GameStatus.CurrentLevel);
+            }
+
             //PauseGame(false);
 
 
 
         }
     }
+
+
 
     public void BaseGetDamage(eBaseType baseType, float Damage = 0)
     {
@@ -135,6 +148,24 @@ public class LobbyMng : MonoBehaviour
             if (EnemyBaseHp <= 0)
             {
                 BaseGotDestroyed(baseType);
+            }
+            if (EnemyBaseHp <= (EnemyBaseMaxHp * 0.2f))
+            {
+                if (!NoLongerEnemyBaseKnockback)
+                {
+                    NoLongerEnemyBaseKnockback = true;
+
+                    Debug.Log("ENOUGH");
+
+
+
+                    EntityMng.Instance.TrySpawnEnemy(eEnemyType.UpgradedSword);
+
+                    EntityMng.Instance.KnockbackAllies(new Vector2(15, 15));
+
+                    ParticleMng.Instance.CreateParticle(eParticleType.Destroy2, Vector2.zero);
+
+                }
             }
         }
     }

@@ -201,9 +201,9 @@ public class EntityCtrl : MonoBehaviour
     }
 
     /// <summary>
-    /// 넉백 받는 함수
+    /// 넉백 받는 함수 Basic
     /// </summary>
-    protected void GetKnockback(bool StrongKnockback = true)
+    public void GetKnockback(bool StrongKnockback = true)
     {
         if (IsKnockbacked == false)
         {
@@ -227,6 +227,25 @@ public class EntityCtrl : MonoBehaviour
 
         }
     }
+
+    /// <summary>
+    /// 넉백 받는 함수 Vector2
+    /// </summary>
+    /// <param name="StrongKnockback"></param>
+    public void GetKnockback(Vector2 Force)
+    {
+        if (IsKnockbacked == false)
+        {
+            KnockbackForceFieldTick = KnockbackForceFieldTime;
+            IsKnockbacked = true;
+
+            animator.SetTrigger("Hit");
+
+            rb.AddForce(new Vector2(-IntegerForMove * Force.x, Force.y), ForceMode2D.Impulse);
+
+        }
+    }
+
 
 
     /// <summary>

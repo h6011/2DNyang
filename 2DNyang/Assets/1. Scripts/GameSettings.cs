@@ -125,6 +125,24 @@ public class GameSettings : MonoBehaviour
         },
         new EnemyProperties()
         {
+            EnemyType = eEnemyType.UpgradedSword,
+            Hp = 50f,
+
+            DetectDistanceMin = 0.5f,
+            DetectDistanceMax = 0.6f,
+
+            SpeedMin = 1.2f,
+            SpeedMax = 1.7f,
+
+            Damage = 1.5f,
+            AttackCooldown = 2f,
+
+            AttackType = eEntityAttackType.Melee,
+
+            SpawnCost = 300,
+        },
+        new EnemyProperties()
+        {
             EnemyType = eEnemyType.Shield,
             Hp = 30f,
 

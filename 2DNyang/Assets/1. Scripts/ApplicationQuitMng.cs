@@ -6,19 +6,20 @@ using UnityEngine.SceneManagement;
 public class ApplicationQuitMng : MonoBehaviour
 {
 
-
-    private bool CanExitGame = false;
-
+    private LobbyMng lobbyMng;
     private LobbyCanvasMng lobbyCanvasMng;
 
     public static ApplicationQuitMng Instance;
+
+    private bool CanExitGame = false;
+
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -27,7 +28,7 @@ public class ApplicationQuitMng : MonoBehaviour
     }
     private void Start()
     {
-        LobbyCanvasMngCheck();
+        MngsCheck();
         Application.wantsToQuit += WhenApplicationQuit;
 
     }
@@ -35,11 +36,15 @@ public class ApplicationQuitMng : MonoBehaviour
     /// <summary>
     /// lobbyCanvasMng 변수 체크하고 없다면 채우는 용도
     /// </summary>
-    private void LobbyCanvasMngCheck()
+    private void MngsCheck()
     {
         if (lobbyCanvasMng == null)
         {
             lobbyCanvasMng = LobbyCanvasMng.Instance;
+        }
+        if (lobbyMng == null)
+        {
+            lobbyMng = LobbyMng.Instance;
         }
     }
 
@@ -72,6 +77,10 @@ Application.Quit();
         lobbyCanvasMng.VisibleUIExpectOther("Main");
     }
 
+    /// <summary>
+    /// Alt F4
+    /// </summary>
+    /// <returns></returns>
     private bool IsAltF4()
     {
         if (Input.GetKey(KeyCode.LeftAlt))
@@ -84,22 +93,25 @@ Application.Quit();
 
     private bool WhenApplicationQuit()
     {
+
+        Scene currentScene = SceneManager.GetActiveScene();
+
         if (!CanExitGame)
         {
-            if (SceneManager.GetActiveScene().name == "Lobby")
+            if (currentScene.name == "Lobby")
             {
+                MngsCheck();
                 if (lobbyCanvasMng != null)
                 {
                     lobbyCanvasMng.VisibleUIExpectOther("NoticeExit");
                 }
             }
-            else if (SceneManager.GetActiveScene().name == "Game")
+            else if (currentScene.name == "Game")
             {
-                LobbyMng.Instance.PauseGame(true);
+                lobbyMng.PauseGame(true);
             }
         }
 
-        DebugCanvasMng.Instance.ShowText(SceneManager.GetActiveScene().name);
 
         if (IsAltF4())
         {

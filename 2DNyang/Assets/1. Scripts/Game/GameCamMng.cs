@@ -12,7 +12,7 @@ public class GameCamMng : MonoBehaviour
 
 
     [Header("Stat")]
-    [SerializeField] private float cameraMoveSpeed = 3f;
+    [SerializeField] private float cameraMoveSpeed;
 
     
 
@@ -49,6 +49,8 @@ public class GameCamMng : MonoBehaviour
 
         mapSize = fieldCollider.bounds.size;
         center = fieldCollider.bounds.center;
+
+        cameraMoveSpeed = SettingsMng.Instance.GetSettings().CameraSpeed;
     }
 
     private float inputKeys()

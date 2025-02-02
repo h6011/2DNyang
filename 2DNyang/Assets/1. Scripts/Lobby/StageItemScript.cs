@@ -9,6 +9,9 @@ public class StageItemScript : MonoBehaviour
 {
 
     [SerializeField] private Button Btn;
+    [SerializeField] private Image image;
+
+
     [SerializeField] private TMP_Text Title;
     [SerializeField] private int level;
 
@@ -21,6 +24,16 @@ public class StageItemScript : MonoBehaviour
     public void ChangeLevel(int _level)
     {
         level = _level;
+    }
+
+    public void ChangeColor(Color color)
+    {
+        image.color = color;
+
+        ColorBlock colorBlock = Btn.colors;
+        colorBlock.normalColor = color;
+
+        Btn.colors = colorBlock;
     }
 
     private IEnumerator whenLoadStageScene()
