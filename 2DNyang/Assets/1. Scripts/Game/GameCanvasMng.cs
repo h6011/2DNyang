@@ -28,6 +28,9 @@ public class GameCanvasMng : MonoBehaviour
     private AudioMng audioMng;
     private PrefabMng prefabMng;
 
+    [Header("Vars")]
+    public Transform AllyBase;
+    public Transform EnemyBase;
 
 
     [Header("UI")]
@@ -107,8 +110,6 @@ public class GameCanvasMng : MonoBehaviour
     {
         InitStartFrames();
 
-
-
         GameStatus.addListenerToBtn(BackBtn, () =>
         {
             lobbyMng.UnpauseGame(true);
@@ -134,6 +135,7 @@ public class GameCanvasMng : MonoBehaviour
 
         GameStatus.addListenerToBtn(SettingsBtn, () =>
         {
+            GameStatus.IsMultipleScene = true;
             SceneManager.LoadScene("Settings", LoadSceneMode.Additive);
             audioMng.PlayClickAudio();
             //lobbyMng.UnpauseGame(false);
@@ -233,6 +235,8 @@ public class GameCanvasMng : MonoBehaviour
         Trs.gameObject.SetActive(Visible);
     }
 
+
+    
 
 
 

@@ -48,9 +48,9 @@ public class SettingsMng : MonoBehaviour
         CurrentSettings = loadSettingsOfFile();
 
 
-        Debug.LogWarning(FixedPath);
+        //Debug.LogWarning(FixedPath);
 
-        PrintCurrentSettings();
+        //PrintCurrentSettings();
 
     }
 

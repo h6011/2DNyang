@@ -62,7 +62,14 @@ public class SettingsCanvasMng : MonoBehaviour
 
         GameStatus.addListenerToBtn(BackBtn, () =>
         {
-            SceneManager.LoadScene("Lobby");
+            if (GameStatus.IsMultipleScene)
+            {
+                SceneManager.UnloadSceneAsync("Settings");
+            }
+            else
+            {
+                SceneManager.LoadScene("Lobby");
+            }
         });
         FpsDropdown.onValueChanged.RemoveAllListeners();
         FpsDropdown.onValueChanged.AddListener((int arg1) =>

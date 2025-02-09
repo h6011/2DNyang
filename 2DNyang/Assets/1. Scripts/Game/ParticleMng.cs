@@ -49,7 +49,8 @@ public class ParticleMng : MonoBehaviour
             Transform New = Instantiate(Destroy2Particle, Position, Quaternion.identity, null);
             ParticleSystem particleSystem = New.GetComponent<ParticleSystem>();
             particleSystem.Play();
-            
+
+
         }
     }
 

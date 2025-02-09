@@ -37,6 +37,8 @@ public class LobbyMng : MonoBehaviour
 
     public float allyBaseHp => AllyBaseHp;
     public float enemyBaseHp => EnemyBaseHp;
+    public float allyBaseMaxHp => AllyBaseMaxHp;
+    public float enemyBaseMaxHp => EnemyBaseMaxHp;
 
     private void Awake()
     {

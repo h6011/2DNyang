@@ -10,7 +10,7 @@ public class AudioListenerMng : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("[AudioListener] Awake");
+        //Debug.Log("[AudioListener] Awake");
 
         if (Instance == null)
         {

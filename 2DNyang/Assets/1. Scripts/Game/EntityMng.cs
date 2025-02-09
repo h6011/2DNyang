@@ -145,7 +145,7 @@ public class EntityMng : MonoBehaviour
 
         if (baseType == eBaseType.Ally)
         {
-            target = allyBase;
+            target = allyBase.Find("Render");
             savePos = SaveAllyBasePos;
         }
         else if (baseType == eBaseType.Enemy)
@@ -184,7 +184,7 @@ public class EntityMng : MonoBehaviour
 
         if (baseType == eBaseType.Ally)
         {
-            target = allyBase;
+            target = allyBase.Find("Render");
             savePos = SaveAllyBasePos;
         }
         else if (baseType == eBaseType.Enemy)

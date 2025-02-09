@@ -9,7 +9,7 @@ public class MngsController : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("[MngsController] Awake");
+        //Debug.Log("[MngsController] Awake");
 
         if (Instance == null)
         {

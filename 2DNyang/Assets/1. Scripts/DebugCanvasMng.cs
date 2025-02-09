@@ -10,6 +10,7 @@ public class DebugCanvasMng : MonoBehaviour
 
     [Header("Prefab")]
     public GameObject DebugText;
+    public TMP_Text DisplayFpsTitle;
 
 
     private void Awake()
@@ -25,6 +26,20 @@ public class DebugCanvasMng : MonoBehaviour
         }
     }
 
+
+    private void Update()
+    {
+        if (SettingsMng.Instance.GetSettings().DisplayFPS)
+        {
+            DisplayFpsTitle.gameObject.SetActive(true);
+            float fps = Mathf.Floor(1.0f / Time.unscaledDeltaTime);
+            DisplayFpsTitle.text = $"Fps : {fps}";
+        }
+        else
+        {
+            DisplayFpsTitle.gameObject.SetActive(false);
+        }
+    }
 
     public void ShowText(string text)
     {

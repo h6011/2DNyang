@@ -48,6 +48,7 @@ public class GameStatus : MonoBehaviour
 
 
     public static bool isLobbyLoaded = false;
+    public static bool IsMultipleScene = false;
     public static int CurrentLevel = 0;
 
 

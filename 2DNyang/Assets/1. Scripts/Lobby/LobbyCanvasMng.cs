@@ -106,6 +106,8 @@ public class LobbyCanvasMng : MonoBehaviour
     {
         audioMng = AudioMng.Instance;
 
+        GameStatus.IsMultipleScene = false;
+
         SetUpStageUI();
 
         VisibleUIExpectOther("Main");
