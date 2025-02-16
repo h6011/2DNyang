@@ -64,6 +64,7 @@ public class SettingsCanvasMng : MonoBehaviour
         {
             if (GameStatus.IsMultipleScene)
             {
+                GameStatus.IsMultipleScene = false;
                 SceneManager.UnloadSceneAsync("Settings");
             }
             else

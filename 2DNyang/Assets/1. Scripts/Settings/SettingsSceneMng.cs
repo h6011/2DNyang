@@ -12,7 +12,15 @@ public class SettingsSceneMng : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene("Lobby");
+            if (GameStatus.IsMultipleScene)
+            {
+                GameStatus.IsMultipleScene = false;
+                SceneManager.UnloadSceneAsync("Settings");
+            }
+            else
+            {
+                SceneManager.LoadScene("Lobby");
+            }
         }
     }
 

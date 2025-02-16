@@ -110,17 +110,28 @@ public class GameCanvasMng : MonoBehaviour
     {
         InitStartFrames();
 
+        
+
         GameStatus.addListenerToBtn(BackBtn, () =>
         {
-            lobbyMng.UnpauseGame(true);
-            audioMng.PlayClickAudio();
+            Debug.Log(GameStatus.IsMultipleScene);
+            if (GameStatus.IsMultipleScene == false)
+            {
+                lobbyMng.UnpauseGame(true);
+                audioMng.PlayClickAudio();
+            }
+            
         });
 
         GameStatus.addListenerToBtn(ExitBtn, () =>
         {
-            lobbyMng.UnpauseGame(true);
-            audioMng.PlayClickAudio();
-            SceneManager.LoadScene("Lobby");
+            Debug.Log(GameStatus.IsMultipleScene);
+            if (GameStatus.IsMultipleScene == false)
+            {
+                lobbyMng.UnpauseGame(true);
+                audioMng.PlayClickAudio();
+                SceneManager.LoadScene("Lobby");
+            }
         });
 
 

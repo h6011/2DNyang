@@ -73,8 +73,10 @@ public class GameMng : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            LobbyMng.Instance.TryEscape(true);
-            
+            if (GameStatus.IsMultipleScene == false)
+            {
+                LobbyMng.Instance.TryEscape(true);
+            }
         }
     }
 

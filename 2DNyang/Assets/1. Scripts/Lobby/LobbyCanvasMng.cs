@@ -108,6 +108,8 @@ public class LobbyCanvasMng : MonoBehaviour
 
         GameStatus.IsMultipleScene = false;
 
+        audioMng.StopAudio("BGM");
+
         SetUpStageUI();
 
         VisibleUIExpectOther("Main");
