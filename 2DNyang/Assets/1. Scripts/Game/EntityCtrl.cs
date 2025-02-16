@@ -123,6 +123,7 @@ public class EntityCtrl : MonoBehaviour
         EntityAttackType = Properties.AttackType;
         ProjectilePrefabName = Properties.ProjectilePrefabName;
         ProjectilePrefabObject = prefabMng.GetPrefabByName(ProjectilePrefabName);
+
     }
 
 

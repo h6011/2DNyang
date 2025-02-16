@@ -249,7 +249,28 @@ public class GameCanvasMng : MonoBehaviour
 
     
 
+    public void OnGameEnd(bool IsWon)
+    {
+        Transform FindUI = transform.Find("GameResult");
+        if (FindUI)
+        {
+            FindUI.gameObject.SetActive(true);
+            Transform Holder = FindUI.Find("Holder");
+            Transform TitleTransform = Holder.Find("Title");
+            TMP_Text Title = TitleTransform.GetComponent<TMP_Text>();
 
+            if (IsWon)
+            {
+                Title.text = "Completed the Stage!";
+            }
+            else
+            {
+                Title.text = "You Failed..";
+            }
+
+        }
+
+    }
 
 
 

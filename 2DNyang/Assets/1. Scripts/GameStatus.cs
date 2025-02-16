@@ -20,7 +20,8 @@ public class EnemyListArg
 public class StageWaveInfoArg
 {
     public int wave;
-    public List<EnemyListArg> arg;
+    public List<EnemyListArg> MainSpawnArg;
+    public List<EnemyListArg> HpLowSpawArg;
 
 }
 
@@ -43,7 +44,8 @@ public class GameStatus : MonoBehaviour
     {
         new StageInfoClass() { index = 0, name = "Tutorial" },
         new StageInfoClass() { index = 1, name = "Stage1" },
-        new StageInfoClass() { index = 2, name = "Stage2" }
+        new StageInfoClass() { index = 2, name = "Stage2" },
+        new StageInfoClass() { index = 3, name = "Stage3" },
     };
 
 
@@ -55,7 +57,7 @@ public class GameStatus : MonoBehaviour
     public static List<StageInfoClass> GetAvailableStageInfos()
     {
         List<StageInfoClass> New = new List<StageInfoClass>(StageInfos);
-        New.RemoveAt(0);
+        //New.RemoveAt(0);
         return New;
     }
 
@@ -65,7 +67,7 @@ public class GameStatus : MonoBehaviour
         new StageWaveInfoArg()
         {
             wave = 0,
-            arg = new List<EnemyListArg>()
+            MainSpawnArg = new List<EnemyListArg>()
             {
                 new EnemyListArg()
                 {
@@ -74,40 +76,83 @@ public class GameStatus : MonoBehaviour
                     Delay = 0f,
                     BreakTime = 100f,
                 },
-            }
+            },
         },
 
         new StageWaveInfoArg()
         {
             wave = 1,
-            arg = new List<EnemyListArg>()
+            MainSpawnArg = new List<EnemyListArg>()
             {
                 new EnemyListArg()
                 {
                     EnemyType = eEnemyType.Sword,
                     Count = 1,
-                    Delay = 0f,
+                    Delay = 7f,
                     BreakTime = 6f,
                 },
-            }
+            },
+             HpLowSpawArg = new List<EnemyListArg>(){ },
         },
         new StageWaveInfoArg()
         {
             wave = 2,
-            arg = new List<EnemyListArg>()
+            MainSpawnArg = new List<EnemyListArg>()
             {
                 new EnemyListArg()
                 {
                     EnemyType = eEnemyType.Sword,
                     Count = 1,
-                    Delay = 0f,
-                    BreakTime = 5f,
+                    Delay = 7f,
+                    BreakTime = 6f,
                 },
-            }
-        }
+            },
+             HpLowSpawArg = new List<EnemyListArg>()
+            {
+                new EnemyListArg()
+                {
+                    EnemyType = eEnemyType.UpgradedSword,
+                    Count = 2,
+                    Delay = 1f,
+                    BreakTime = 0f,
+                },
+            },
+        },
+        new StageWaveInfoArg()
+        {
+            wave = 3,
+            MainSpawnArg = new List<EnemyListArg>()
+            {
+                new EnemyListArg()
+                {
+                    EnemyType = eEnemyType.Sword,
+                    Count = 1,
+                    Delay = 7f,
+                    BreakTime = 6f,
+                },
+            },
+             HpLowSpawArg = new List<EnemyListArg>()
+            {
+                new EnemyListArg()
+                {
+                    EnemyType = eEnemyType.UpgradedSword,
+                    Count = 2,
+                    Delay = 1f,
+                    BreakTime = 0f,
+                },
+
+                new EnemyListArg()
+                {
+                    EnemyType = eEnemyType.Bow,
+                    Count = 3,
+                    Delay = 1f,
+                    BreakTime = 0f,
+                },
+            },
+        },
     };
 
-    public static List<EnemyListArg> GetStageWaveInfoByWave(int _wave)
+    public static StageWaveInfoArg GetStageWaveInfoByWave(int _wave)
     {
         int count = StageWaveInfo.Count;
         for (int iNum = 0; iNum < count; iNum++)
@@ -115,7 +160,7 @@ public class GameStatus : MonoBehaviour
             StageWaveInfoArg arg = StageWaveInfo[iNum];
             if (arg.wave == _wave)
             {
-                return arg.arg;
+                return arg;
             }
         }
         return null;

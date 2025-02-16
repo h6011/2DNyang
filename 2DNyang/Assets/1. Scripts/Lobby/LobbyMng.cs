@@ -7,6 +7,10 @@ public class LobbyMng : MonoBehaviour
 
     public static LobbyMng Instance;
 
+    [Header("MNGS")]
+    private AudioMng audioMng;
+
+
     [Header("Stat")]
     [SerializeField] private float Score;
     [SerializeField] private float Money;
@@ -26,6 +30,7 @@ public class LobbyMng : MonoBehaviour
 
     [SerializeField] private bool IsGamePaused = false;
     [SerializeField] private bool isGameStarted = false;
+    [SerializeField] private bool isGameEnded = false;
     [SerializeField] private float GameTime;
     [SerializeField] private bool NoLongerEnemyBaseKnockback = false;
 
@@ -58,11 +63,16 @@ public class LobbyMng : MonoBehaviour
         SettingsArgs args = SettingsMng.Instance.GetSettings();
         SettingsMng.Instance.ApplySettings(args);
 
+        GetMngs();
         //QualitySettings.vSyncCount = 0;
 
         //Debug.Log(AudioListener.volume);
     }
 
+    private void GetMngs()
+    {
+        audioMng = AudioMng.Instance;
+    }
     
 
     public void WhenAllySpawn(eAllyType allyType)
@@ -94,12 +104,13 @@ public class LobbyMng : MonoBehaviour
     {
         ResetGameStat();
         isGameStarted = true;
+        isGameEnded = false;
         NoLongerEnemyBaseKnockback = false;
 
         Time.timeScale = 1;
 
-        AudioMng.Instance.StopAudio("BGM");
-        AudioMng.Instance.PlayAudio("BGM", 0.3f, true);
+        audioMng.StopAudio("BGM");
+        audioMng.PlayAudio("BGM", 0.3f, true);
     }
 
 
@@ -115,14 +126,18 @@ public class LobbyMng : MonoBehaviour
         if (isGameStarted)
         {
             isGameStarted = false;
-
-            GameCanvasMng.Instance.SetVisibleUI("GameResult", true);
+            isGameEnded = true;
 
             EntityMng.Instance.BaseDestroyedEffect(baseType);
 
             if (baseType == eBaseType.Enemy)
             {
+                GameCanvasMng.Instance.OnGameEnd(true);
                 PlayerDataMng.Instance.OnClearedStage(GameStatus.CurrentLevel);
+            }
+            else
+            {
+                GameCanvasMng.Instance.OnGameEnd(false);
             }
 
             //PauseGame(false);
@@ -132,7 +147,29 @@ public class LobbyMng : MonoBehaviour
         }
     }
 
+    IEnumerator SpawnEnemyWhenLow(List<EnemyListArg> enemyList)
+    {
+        int count = enemyList.Count;
 
+        for (int i = 0; i < count; i++)
+        {
+            EnemyListArg arg = enemyList[i];
+
+            int EnemyCount = arg.Count;
+
+            for (int j = 0; j < EnemyCount; j++)
+            {
+                EntityMng.Instance.TrySpawnEnemy(arg.EnemyType);
+                yield return new WaitForSeconds(arg.Delay);
+            }
+
+            yield return new WaitForSeconds(arg.BreakTime);
+        }
+
+
+
+        yield return null;
+    }
 
     public void BaseGetDamage(eBaseType baseType, float Damage = 0)
     {
@@ -159,13 +196,25 @@ public class LobbyMng : MonoBehaviour
 
                     Debug.Log("ENOUGH");
 
+                   
+
+                    StageWaveInfoArg WaveInfo = GameStatus.GetStageWaveInfoByWave(GameStatus.CurrentLevel);
+                    List<EnemyListArg> HpLowSpawArg = WaveInfo.HpLowSpawArg;
+
+                    if (HpLowSpawArg.Count > 0)
+                    {
+                        StartCoroutine(SpawnEnemyWhenLow(HpLowSpawArg));
+
+                        EntityMng.Instance.KnockbackAllies(new Vector2(15, 15));
+
+                        ParticleMng.Instance.CreateParticle(eParticleType.Destroy2, GameMng.Instance.EnemyBase.position);
+
+                    }
 
 
-                    EntityMng.Instance.TrySpawnEnemy(eEnemyType.UpgradedSword);
+                   
 
-                    EntityMng.Instance.KnockbackAllies(new Vector2(15, 15));
-
-                    ParticleMng.Instance.CreateParticle(eParticleType.Destroy2, Vector2.zero);
+                   
 
                 }
             }
@@ -193,7 +242,7 @@ public class LobbyMng : MonoBehaviour
         {
             IsGamePaused = true;
             PauseGameTime();
-            AudioMng.Instance.PauseAllAudio();
+            audioMng.PauseAllAudio();
             if (UIVisible)
             {
                 EscapeUIVisible(IsGamePaused);
@@ -207,7 +256,7 @@ public class LobbyMng : MonoBehaviour
         {
             IsGamePaused = false;
             StartGameTime();
-            AudioMng.Instance.UnpauseAllAudio();
+            audioMng.UnpauseAllAudio();
             if (UIVisible)
             {
                 EscapeUIVisible(IsGamePaused);
@@ -237,6 +286,11 @@ public class LobbyMng : MonoBehaviour
     public bool GetIsGamePaused()
     {
         return IsGamePaused;
+    }
+
+    public bool GetisGameEnded()
+    {
+        return isGameEnded;
     }
 
 

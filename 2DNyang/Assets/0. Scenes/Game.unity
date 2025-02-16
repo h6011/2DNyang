@@ -2946,6 +2946,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1594e9adec8188e4b96d804d0172448e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AllyBase: {fileID: 2120858227}
+  EnemyBase: {fileID: 891472355}
 --- !u!1 &1627452501
 GameObject:
   m_ObjectHideFlags: 0
@@ -3000,8 +3002,8 @@ MonoBehaviour:
   bowAllyObj: {fileID: 1092530736055117401, guid: 1d862c9af234fb447bdd1447ca50f568, type: 3}
   swordEnemyObj: {fileID: 1092530736055117401, guid: e524be50626b488498607715f626f621, type: 3}
   upgradedSwordEnemyObj: {fileID: 1092530736055117401, guid: 5e14facaec14c2541972c5e80e130930, type: 3}
-  shieldEnemyObj: {fileID: 0}
-  bowEnemyObj: {fileID: 0}
+  shieldEnemyObj: {fileID: 1092530736055117401, guid: 368708cc2ff3a4f45bacdba9d98e88db, type: 3}
+  bowEnemyObj: {fileID: 1092530736055117401, guid: 8f7382d7b85843a4298dfd704dcd3b09, type: 3}
 --- !u!1 &1653387302
 GameObject:
   m_ObjectHideFlags: 0
@@ -3197,7 +3199,7 @@ GameObject:
   - component: {fileID: 1878168860}
   - component: {fileID: 1878168859}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

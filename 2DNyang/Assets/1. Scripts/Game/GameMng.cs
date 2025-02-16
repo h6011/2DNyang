@@ -11,6 +11,9 @@ public class GameMng : MonoBehaviour
 
     private List<Coroutine> EnemySpawnLoopCoroutines = new List<Coroutine>();
 
+    public Transform AllyBase;
+    public Transform EnemyBase;
+
 
     private void Awake()
     {
@@ -51,11 +54,14 @@ public class GameMng : MonoBehaviour
         int currentLevel = GameStatus.CurrentLevel;
         Debug.Log($"Current Level : {currentLevel}");
 
-        List<EnemyListArg> args = GameStatus.GetStageWaveInfoByWave(currentLevel);
-        int argsCount = args.Count;
-        for (int iNum = 0; iNum < args.Count; iNum++)
+        StageWaveInfoArg WaveInfo = GameStatus.GetStageWaveInfoByWave(currentLevel);
+
+        List<EnemyListArg> MainSpawnArg = WaveInfo.MainSpawnArg;
+        int argsCount = MainSpawnArg.Count;
+
+        for (int iNum = 0; iNum < MainSpawnArg.Count; iNum++)
         {
-            Coroutine coroutine = StartCoroutine(EnemySpawnLoopCoroutine(args[iNum]));
+            Coroutine coroutine = StartCoroutine(EnemySpawnLoopCoroutine(MainSpawnArg[iNum]));
             EnemySpawnLoopCoroutines.Add(coroutine);
         }
 
@@ -73,7 +79,7 @@ public class GameMng : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameStatus.IsMultipleScene == false)
+            if (GameStatus.IsMultipleScene == false && LobbyMng.Instance.GetisGameEnded() == false)
             {
                 LobbyMng.Instance.TryEscape(true);
             }

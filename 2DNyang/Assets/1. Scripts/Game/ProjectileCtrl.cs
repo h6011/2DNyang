@@ -6,6 +6,7 @@ public class ProjectileCtrl : MonoBehaviour
 {
 
     Rigidbody2D rb;
+    SpriteRenderer spriteRenderer;
 
     private bool IsEnemyProjectile = false;
     private int IntegerForMove = 1;
@@ -19,6 +20,7 @@ public class ProjectileCtrl : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
@@ -64,6 +66,14 @@ public class ProjectileCtrl : MonoBehaviour
     public void WhenOnSpawn()
     {
         rb.velocity = new Vector2(IntegerForMove * ProjectilePower, 0);
+        if (IsEnemyProjectile)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else
+        {
+            spriteRenderer.flipX = false;
+        }
     }
 
     private void PlayBowAttackHitSound()
