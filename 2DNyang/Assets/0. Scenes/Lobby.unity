@@ -867,7 +867,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &323409820
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1104,6 +1104,7 @@ MonoBehaviour:
   EnemyBaseMaxHp: 100
   IsGamePaused: 0
   isGameStarted: 0
+  isGameEnded: 0
   GameTime: 0
   NoLongerEnemyBaseKnockback: 0
 --- !u!4 &412462711
