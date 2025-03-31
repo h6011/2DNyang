@@ -16,6 +16,7 @@ public class IsStageClearArg
 public class PlayerDataArgs
 {
     public bool DidTutorial = false;
+    public bool SkippedTutorial = false;
     public float PlayTime = 0f;
     public List<IsStageClearArg> IsStageClearArg = new List<IsStageClearArg>();
 }
@@ -71,31 +72,6 @@ public class PlayerDataMng : MonoBehaviour
     }
     
 
-    //public void PrintStageClearArg()
-    //{
-    //    Dictionary<int, bool> dict = CurrentData.StageClearArg;
-       
-        
-
-    //    List<int> keys = dict.Keys.ToList();
-    //    int keyCount = keys.Count;
-
-    //    Debug.Log($"Key Count : {keyCount}");
-
-    //    for (int i = 0; i < keyCount; i++)
-    //    {
-    //        var key = keys[i];
-    //        var value = dict[key];
-    //        Debug.Log($"key : {key}, value : {value}");
-    //    }
-
-    //    //foreach (var item in dict)
-    //    //{
-    //    //    item.Key
-    //    //}
-
-
-    //}
 
     public void OnClearedStage(int StageNum)
     {

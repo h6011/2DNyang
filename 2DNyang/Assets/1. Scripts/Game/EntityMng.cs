@@ -46,8 +46,10 @@ public class EntityMng : MonoBehaviour
 
 
     private List<GameObject> EntityList = new List<GameObject>();
+    public int CurrentAllyCount;
+    public int CurrentEnemyCount;
 
-
+    public int allySpawnCount;
 
     private void Awake()
     {
@@ -71,6 +73,7 @@ public class EntityMng : MonoBehaviour
     {
         
     }
+
 
 
     public void TrySpawnAlly(eAllyType allyType)
@@ -99,6 +102,13 @@ public class EntityMng : MonoBehaviour
 
             GameObject newAlly = Instantiate(obj, AllySpawnPos.position, Quaternion.identity, Dynamic);
             EntityList.Add(newAlly);
+            CurrentAllyCount++;
+
+            allySpawnCount++;
+            if (allySpawnCount >= 100)
+            {
+                allySpawnCount = 0;
+            }
         }
 
 
@@ -132,6 +142,7 @@ public class EntityMng : MonoBehaviour
 
         GameObject newEnemy = Instantiate(obj, EnemySpawnPos.position, Quaternion.identity, Dynamic);
         EntityList.Add(newEnemy);
+        CurrentEnemyCount++;
     }
 
 
@@ -286,6 +297,16 @@ public class EntityMng : MonoBehaviour
     public void WhenEntityDead(GameObject EntityObj)
     {
         EntityList.Remove(EntityObj);
+        AllyCtrl allyCtrl = EntityObj.GetComponent<AllyCtrl>();
+        EnemyCtrl enemyCtrl = EntityObj.GetComponent<EnemyCtrl>();
+        if (allyCtrl)
+        {
+            CurrentAllyCount--;
+        }
+        else if (enemyCtrl)
+        {
+            CurrentEnemyCount--;
+        }
     }
 
     public void KnockbackAllies(Vector2 KnockbackAmount)

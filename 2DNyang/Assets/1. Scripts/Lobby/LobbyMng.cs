@@ -45,6 +45,9 @@ public class LobbyMng : MonoBehaviour
     public float allyBaseMaxHp => AllyBaseMaxHp;
     public float enemyBaseMaxHp => EnemyBaseMaxHp;
 
+    private bool WhenTutorialTestGiveMoney1Bool = false;
+    private bool WhenTutorialTestGiveMoney2Bool = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -73,7 +76,27 @@ public class LobbyMng : MonoBehaviour
     {
         audioMng = AudioMng.Instance;
     }
-    
+
+
+    public void WhenTutorialTestGiveMoney1()
+    {
+        if (WhenTutorialTestGiveMoney1Bool)
+        {
+            return;
+        }
+        WhenTutorialTestGiveMoney1Bool = true;
+        Money += 1500;
+    }
+
+    public void WhenTutorialTestGiveMoney2()
+    {
+        if (WhenTutorialTestGiveMoney2Bool)
+        {
+            return;
+        }
+        WhenTutorialTestGiveMoney2Bool = true;
+        Money += 5000;
+    }
 
     public void WhenAllySpawn(eAllyType allyType)
     {
@@ -90,6 +113,8 @@ public class LobbyMng : MonoBehaviour
 
     public void ResetGameStat()
     {
+        WhenTutorialTestGiveMoney1Bool = false;
+        WhenTutorialTestGiveMoney2Bool = false;
         GameTime = 0;
         Money = 0;
         AllyBaseHp = AllyBaseMaxHp;

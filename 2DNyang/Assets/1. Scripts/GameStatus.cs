@@ -57,7 +57,7 @@ public class GameStatus : MonoBehaviour
     public static List<StageInfoClass> GetAvailableStageInfos()
     {
         List<StageInfoClass> New = new List<StageInfoClass>(StageInfos);
-        //New.RemoveAt(0);
+        New.RemoveAt(0);
         return New;
     }
 

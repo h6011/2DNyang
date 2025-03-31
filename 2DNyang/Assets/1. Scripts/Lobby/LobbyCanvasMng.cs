@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class LobbyCanvasMng : MonoBehaviour
 {
     AudioMng audioMng;
-
+    ApplicationQuitMng applicationQuitMng;
+    PlayerDataMng playerDataMng;
 
     public static LobbyCanvasMng Instance;
 
@@ -22,6 +23,11 @@ public class LobbyCanvasMng : MonoBehaviour
 
     public Button NoticeExitUI_YesBtn;
     public Button NoticeExitUI_NoBtn;
+
+    [Header("NoticeTutorial UI")]
+
+    public Button NoticeTutorialUI_YesBtn;
+    public Button NoticeTutorialUI_NoBtn;
 
     [Header("Stage UI")]
     public Button Stage_BackBtn;
@@ -53,12 +59,37 @@ public class LobbyCanvasMng : MonoBehaviour
         }
     }
 
-
-    private void addListenerToBtn(Button _Btn, UnityEngine.Events.UnityAction _Action)
+    private void Start()
     {
-        _Btn.onClick.RemoveAllListeners();
-        _Btn.onClick.AddListener(_Action);
+        INIT_MNGS();
+
+        GameStatus.IsMultipleScene = false;
+
+        audioMng.StopAudio("BGM");
+
+        SetUpStageUI();
+
+        VisibleUIExpectOther("Main");
+
+        ConnectBtns();
+
+
+
+
+
     }
+
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            VisibleUIExpectOther("Main");
+        }
+    }
+
+
 
     private void SetUpStageUI()
     {
@@ -98,79 +129,104 @@ public class LobbyCanvasMng : MonoBehaviour
         
     }
 
-    
-
-    
-
-    private void Start()
+    private void OnPlayBtnClicked()
     {
-        audioMng = AudioMng.Instance;
-
-        GameStatus.IsMultipleScene = false;
-
-        audioMng.StopAudio("BGM");
-
-        SetUpStageUI();
-
-        VisibleUIExpectOther("Main");
-
-        addListenerToBtn(PlayBtn, () =>
+        PlayerDataArgs args = PlayerDataMng.Instance.GetData();
+        audioMng.PlayClickAudio();
+        if (args.SkippedTutorial)
         {
             VisibleUIExpectOther("Stage");
+        }
+        else
+        {
+            if (args.DidTutorial)
+            {
+                VisibleUIExpectOther("Stage");
+            }
+            else
+            {
+                VisibleUIExpectOther("NoticeTutorial");
+            }
+        }
+    }
+
+    private void INIT_MNGS()
+    {
+        audioMng = AudioMng.Instance;
+        applicationQuitMng = ApplicationQuitMng.Instance;
+        playerDataMng = PlayerDataMng.Instance;
+    }
+    
+
+    private IEnumerator whenLoadStageScene(int level)
+    {
+        yield return null;
+        GameStatus.CurrentLevel = level;
+        LobbyMng.Instance.StartGame();
+        SceneManager.LoadScene("Game");
+    }
+
+
+    private void ConnectBtns()
+    {
+
+        GameStatus.addListenerToBtn(NoticeTutorialUI_YesBtn, () =>
+        {
+            StartCoroutine(whenLoadStageScene(0));
             audioMng.PlayClickAudio();
         });
 
-        addListenerToBtn(ShopBtn, () =>
+        GameStatus.addListenerToBtn(NoticeTutorialUI_NoBtn, () =>
+        {
+            PlayerDataArgs Args = playerDataMng.GetData();
+            Args.SkippedTutorial = true;
+            playerDataMng.SaveData(Args);
+            VisibleUIExpectOther("Main");
+            audioMng.PlayClickAudio();
+        });
+
+        GameStatus.addListenerToBtn(PlayBtn, OnPlayBtnClicked);
+
+        GameStatus.addListenerToBtn(ShopBtn, () =>
         {
             audioMng.PlayClickAudio();
         });
 
-        addListenerToBtn(SettingsBtn, () =>
+        GameStatus.addListenerToBtn(SettingsBtn, () =>
         {
             SceneManager.LoadScene("Settings");
             audioMng.PlayClickAudio();
         });
 
-        addListenerToBtn(ExitGameBtn, () =>
+        GameStatus.addListenerToBtn(ExitGameBtn, () =>
         {
-            ApplicationQuitMng.Instance.ExitGame();
+            applicationQuitMng.ExitGame();
             audioMng.PlayClickAudio();
         });
 
-        addListenerToBtn(NoticeExitUI_YesBtn, () =>
+        ////////////////////// NoticeExit UI ////////////////////
+
+        GameStatus.addListenerToBtn(NoticeExitUI_YesBtn, () =>
         {
-            ApplicationQuitMng.Instance.TryQuitGame();
+            applicationQuitMng.TryQuitGame();
             audioMng.PlayClickAudio();
         });
 
-        addListenerToBtn(NoticeExitUI_NoBtn, () =>
+        GameStatus.addListenerToBtn(NoticeExitUI_NoBtn, () =>
         {
-            ApplicationQuitMng.Instance.TryCancelQuitGame();
+            applicationQuitMng.TryCancelQuitGame();
             audioMng.PlayClickAudio();
         });
 
-        addListenerToBtn(Stage_BackBtn, () =>
+        ////////////////////////////////////////////////////////
+
+
+        GameStatus.addListenerToBtn(Stage_BackBtn, () =>
         {
             VisibleUIExpectOther("Main");
             audioMng.PlayClickAudio();
         });
-
-
-
     }
-
-
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            VisibleUIExpectOther("Main");
-        }
-    }
-
-
-
 
 
 

@@ -5386,6 +5386,8 @@ MonoBehaviour:
   ExitGameBtn: {fileID: 1634366698}
   NoticeExitUI_YesBtn: {fileID: 573304909}
   NoticeExitUI_NoBtn: {fileID: 882074301}
+  NoticeTutorialUI_YesBtn: {fileID: 1634568559}
+  NoticeTutorialUI_NoBtn: {fileID: 453460663}
   Stage_BackBtn: {fileID: 1475317783}
   StageItem: {fileID: 2439980506092587301, guid: 4f5d4359ea2eb9948976d61b7e9b64e1, type: 3}
   StageBtns: {fileID: 1386061109}

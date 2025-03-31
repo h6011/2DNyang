@@ -215,7 +215,24 @@ public class GameCanvasMng : MonoBehaviour
     }
 
 
-
+    public void SemiSetActiveUI(bool ActiveValue, params string[] UIPath)
+    {
+        int count = UIPath.Length;
+        Transform CurrentTransform = transform;
+        for (int i = 0; i < count; i++)
+        {
+            string currentFind = UIPath[i];
+            Transform FoundObj = CurrentTransform.Find(currentFind);
+            if (FoundObj)
+            {
+                CurrentTransform = FoundObj;
+            }
+        }
+        if (CurrentTransform != transform)
+        {
+            CurrentTransform.gameObject.SetActive(ActiveValue);
+        }
+    }
 
 
     public void ToggleUI(string Name)

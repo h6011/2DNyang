@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class GameCamMng : MonoBehaviour
 {
+    public enum GameCamMngState
+    {
+        Default,
+        Disabled,
+        Custom,
+    }
+
 
     public static GameCamMng Instance;
 
@@ -26,21 +33,37 @@ public class GameCamMng : MonoBehaviour
     [SerializeField] Vector2 mapSize;
     [SerializeField] Vector2 center;
 
+    public Vector3 saveCameraPos;
+
+    private GameCamMngState currentState;
+
+    public GameCamMngState CurrentState
+    {
+        get { return currentState; }
+        set
+        {
+            if (currentState == GameCamMngState.Custom && value == GameCamMngState.Default)
+            {
+                // Custom > Default
+                mainCam.transform.position = saveCameraPos;
+            }
+            currentState = value;
+        }
+    }
+
+    public Vector2 CustomPosition = Vector2.zero;
+
+
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        SELF_INS();
     }
 
     private void Start()
     {
         mainCam = Camera.main;
+
+        saveCameraPos = mainCam.transform.position;
 
         float Aspect = (float)Screen.width / (float)Screen.height;
 
@@ -51,6 +74,36 @@ public class GameCamMng : MonoBehaviour
         center = fieldCollider.bounds.center;
 
         cameraMoveSpeed = SettingsMng.Instance.GetSettings().CameraSpeed;
+    }
+
+    private void Update()
+    {
+        if (currentState == GameCamMngState.Default)
+        {
+            float Horizontal = inputKeys();
+            MoveCamera(Horizontal);
+        }
+        else if (currentState == GameCamMngState.Disabled)
+        {
+
+        }
+        else if (currentState == GameCamMngState.Custom)
+        {
+            CustomMoveCamera();
+        }
+    }
+
+
+    private void SELF_INS()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private float inputKeys()
@@ -78,47 +131,14 @@ public class GameCamMng : MonoBehaviour
 
     }
 
-    private void Update()
+    private void CustomMoveCamera()
     {
-        float Horizontal = inputKeys();
-        MoveCamera(Horizontal);
+        float deltaTime = Time.deltaTime;
+        float FollowTime = 0.5f;//saveCameraPos
+        mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, new Vector3(CustomPosition.x, CustomPosition.y, saveCameraPos.z), deltaTime / FollowTime);
     }
 
-
     
-
-    //private void LateUpdate()
-    //{
-    //    //Vector3 savedPos = mainCam.transform.position;
-    //    //mainCam.transform.position = new Vector3(cameraPosX, savedPos.y, savedPos.z);
-
-    //    //float boundX = fieldCollider.size.x;
-    //    //Vector3 center = fieldCollider.bounds.center;
-    //    //Vector3 boundLeft = center + new Vector3(-boundX / 2, 0, 0);
-
-    //    //Vector3 camLeftWorld = mainCam.ViewportToWorldPoint(new Vector3(0f, 0.5f, 0));
-
-    //    ////mainCam.transform.position = boundLeft;
-
-    //    //Vector3 BoundLeftView = Camera.main.WorldToViewportPoint(boundLeft);
-    //    ////Debug.LogWarning(BoundLeftView.x);
-
-    //    //if (BoundLeftView.x > 0)
-    //    //{
-    //    //    BoundLeftView.x = 0;
-
-            
-
-    //    //    Vector3 Oppsite = mainCam.ViewportToWorldPoint(BoundLeftView);
-    //    //    Vector3 FixPos = Oppsite + new Vector3(boundX / 2, 0, 0);
-    //    //    mainCam.transform.position = new Vector3(FixPos.x, savedPos.y, savedPos.z);
-    //    //}
-
-       
-
-
-
-    //}
 
 
 
